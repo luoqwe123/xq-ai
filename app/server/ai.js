@@ -1,8 +1,8 @@
 // Please install OpenAI SDK first: `npm install openai`
 
 const OpenAI =  require("openai");
-const OPENAI_TEMPERATURE = 0.7;
-const OPENAI_MAX_TOKENS = 150;
+// const OPENAI_TEMPERATURE = 0.7;
+// const OPENAI_MAX_TOKENS = 150;
 const openai = new OpenAI({
         baseURL: 'https://api.deepseek.com',
         apiKey: 'sk-c7b36faf54fc41e784516d893c3aa567'

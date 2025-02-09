@@ -25,6 +25,7 @@ app.post('/ask', async (req, res) => {
             messages: [{ role: "system", content: "You are a helpful assistant." }, { role: "user", content: userQuestion }],
             model: "deepseek-chat",
             stream: true, // Enable streaming
+            max_tokens: 2048,
         });
         
         // Set headers for streaming response

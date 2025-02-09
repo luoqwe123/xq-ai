@@ -15,6 +15,12 @@ coverage
 *.local
 app/server/node_modules
 app/server/.env
+app/server/node_modules
+app/server/ai.js
+
+
+src/components/ai.vue
+src/components/aiMessage.vue
 
 /cypress/videos/
 /cypress/screenshots/
