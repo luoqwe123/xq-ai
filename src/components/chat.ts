@@ -1,10 +1,15 @@
-export const askAi = async (question: string, disabled: boolean, messages: any, answer: string) => {
+export async function askAi(question: string, disabled: any, messages: any, answer: any) {
     if (!question) {
         alert('Please enter a question!');
         return;
     }
     // Disable the button while fetching response
-    disabled = true;
+    disabled.value = true;
+    messages.value.push({
+        sentBy: 'ai',
+        content: '',
+    });
+    const length = messages.value.length
     try {
         const response = await fetch('http://localhost:3000/ask', {
             method: 'POST',
@@ -24,17 +29,15 @@ export const askAi = async (question: string, disabled: boolean, messages: any, 
             if (done) {
                 break;
             }
-            answer += decoder.decode(value, { stream: true });
-            console.log(answer)
+            answer.value += decoder.decode(value, { stream: true });
+
             // outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
         }
     } catch (error) {
         console.error('Error:', error);
-        messages.push({
-            sentBy: 'ai',
-            content: 'An error occurred while fetching the AI response.',
-        });
+        messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
     } finally {
-        disabled = false; // Re-enable the button
+        disabled.value = false; // Re-enable the button
     }
+    messages.value[length - 1].content = answer.value
 }

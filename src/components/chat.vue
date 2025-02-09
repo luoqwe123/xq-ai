@@ -1,6 +1,6 @@
 <template>
     <div class="chat-room">
-        <div class="chat-window">
+        <div class="chat-window" ref="chat">
             <aiMessage style="margin-bottom: 10px;" />
             <div class="messages">
                 <div v-for="(message, index) in messages" :key="index" :class="['message',]">
@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-//问题 disabled 没生效，answer清除上一个问题答案的问题
+//问题 不想发送了，中断生成，输入框
 
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import aiMessage from './aiTro.vue';
 // import { askAi } from './chat';
 interface message {
@@ -46,8 +46,9 @@ const setUnallowToBtn = () => {
 }
 
 const sendMessage = async () => {
+
     answer.value = ""
-    console.log("messages", messages.value)
+    // console.log("messages", messages.value)
     if (newMessage.value.trim() !== '') {
         messages.value.push({
             sentBy: 'user',
@@ -58,12 +59,26 @@ const sendMessage = async () => {
     let question = newMessage.value
     newMessage.value = '';
     await askAi(question, disabled, messages, answer)
-
-   
-
+    
 
 };
+const chat = ref<any>(null);
 
+
+// 滚动到底部函数
+const scrollToBottom = () => {
+    if (chat.value) {
+        let top = chat.value.scrollHeight + 100
+        // console.log("top", top, chat.value.scrollHeight)
+        chat.value.scrollTop = top;
+
+    }
+};
+// 监听聊天消息数组的变化
+// watch(messages.value, () => {
+
+//     scrollToBottom();
+// });
 async function askAi(question: string, disabled: any, messages: any, answer: any) {
     if (!question) {
         alert('Please enter a question!');
@@ -89,6 +104,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         }
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let flag = true
         // Read the stream and display chunks as they arrive
         while (true) {
             const { done, value } = await reader.read();
@@ -96,16 +112,20 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
                 break;
             }
             answer.value += decoder.decode(value, { stream: true });
-            
+            if(flag&&answer.value){
+                flag = false
+                scrollToBottom();
+            }
             // outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
         }
     } catch (error) {
         console.error('Error:', error);
-        messages.value[length-1].content = 'An error occurred while fetching the AI response.'
+        messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
     } finally {
         disabled.value = false; // Re-enable the button
     }
-     messages.value[length-1].content = answer.value
+    messages.value[length - 1].content = answer.value
+    
 }
 
 </script>
@@ -116,15 +136,19 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     flex-direction: column;
     height: 100vh;
     justify-content: space-between;
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
+    width: 100%;
+    align-items: center;
+    padding-top: 1rem;
 }
 
 .chat-window {
     flex: 1;
-    padding: 20px;
+
     overflow-y: auto;
     background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    width: 96%;
+
 }
 
 .messages {
@@ -164,8 +188,10 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
 .input-area {
     display: flex;
     padding: 10px;
+    justify-content: center;
     background-color: #fff;
-    border-top: 1px solid #ddd;
+    border-top: 1.6px solid #ddd;
+    width: 96%;
 }
 
 input {
