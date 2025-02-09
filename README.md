@@ -20,6 +20,13 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 pnpm install
 ```
 
+### Open the service
+
+```sh
+cd app/server
+pnpm dev:server
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
