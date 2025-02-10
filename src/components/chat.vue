@@ -13,7 +13,7 @@
         <div class="input-area">
             <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
             <button @click="sendMessage" :style="disabled ? setUnallowToBtn() : ''">Send</button>
-
+            <button @click="abortRequest" >Stop</button>
         </div>
     </div>
 </template>
@@ -59,11 +59,11 @@ const sendMessage = async () => {
     let question = newMessage.value
     newMessage.value = '';
     await askAi(question, disabled, messages, answer)
-    
+
 
 };
 const chat = ref<any>(null);
-
+const abortController = ref<AbortController | null>(null)
 
 // 滚动到底部函数
 const scrollToBottom = () => {
@@ -79,7 +79,16 @@ const scrollToBottom = () => {
 
 //     scrollToBottom();
 // });
+const abortRequest = () => {
+    if (abortController.value) {
+        abortController.value.abort(); // 中止请求
+        abortController.value = null; // 清空引用
+    }
+};
 async function askAi(question: string, disabled: any, messages: any, answer: any) {
+    const controller = new AbortController();
+    console.log("controller",controller)
+    abortController.value = controller;
     if (!question) {
         alert('Please enter a question!');
         return;
@@ -98,6 +107,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ question }),
+            signal: controller.signal,
         });
         if (!response.body) {
             throw new Error('No response body');
@@ -112,7 +122,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
                 break;
             }
             answer.value += decoder.decode(value, { stream: true });
-            if(flag&&answer.value){
+            if (flag && answer.value) {
                 flag = false
                 scrollToBottom();
             }
@@ -122,11 +132,13 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         console.error('Error:', error);
         messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
     } finally {
+        abortController.value = null;
         disabled.value = false; // Re-enable the button
     }
     messages.value[length - 1].content = answer.value
-    
+
 }
+
 
 </script>
 
