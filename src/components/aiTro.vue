@@ -5,13 +5,14 @@
             <div class="text" style="line-height: 36px;">小秋</div>
         </div>
         <div class="main">{{ content }}</div>
+        <span></span>
     </div>
 </template>
 
 <script setup lang='ts'>
 import Avator from "@/../public/125.jpg"
 const prop = withDefaults(defineProps<{
-    content:string 
+    content?:string 
 }>(),{
     content:"我是一个综合型助手小秋，不会的问题都可以来问我呦 ٩(๑❛ᴗ❛๑)۶"
 })

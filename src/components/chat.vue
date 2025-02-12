@@ -10,17 +10,24 @@
             </div>
             <p></p>
         </div>
+        <div class="icon" @click="abortRequest" v-if="answer">
+            <Svg name="stop" height="20px" width="20px" class="stopBtn">
+                <template #content><span
+                        style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
+            </Svg>
+        </div>
+
         <div class="input-area">
             <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
             <button @click="sendMessage" :style="disabled ? setUnallowToBtn() : ''">Send</button>
-            <button @click="abortRequest" >Stop</button>
+           
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 //问题 不想发送了，中断生成，输入框
-
+import Svg from "@/components/svgComponent.vue"
 import { ref, watch } from 'vue';
 import aiMessage from './aiTro.vue';
 // import { askAi } from './chat';
@@ -47,7 +54,7 @@ const setUnallowToBtn = () => {
 
 const sendMessage = async () => {
 
-    answer.value = ""
+    
     // console.log("messages", messages.value)
     if (newMessage.value.trim() !== '') {
         messages.value.push({
@@ -83,11 +90,13 @@ const abortRequest = () => {
     if (abortController.value) {
         abortController.value.abort(); // 中止请求
         abortController.value = null; // 清空引用
+        messages.value[length - 1].content = answer.value
+        answer.value = ""  //通过answer控制停止生成的按钮
     }
 };
 async function askAi(question: string, disabled: any, messages: any, answer: any) {
     const controller = new AbortController();
-    console.log("controller",controller)
+    console.log("controller", controller)
     abortController.value = controller;
     if (!question) {
         alert('Please enter a question!');
@@ -107,7 +116,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ question }),
-            signal: controller.signal,
+            signal: abortController.value.signal,
         });
         if (!response.body) {
             throw new Error('No response body');
@@ -136,7 +145,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         disabled.value = false; // Re-enable the button
     }
     messages.value[length - 1].content = answer.value
-
+    answer.value = ""
 }
 
 
@@ -206,11 +215,46 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     width: 96%;
 }
 
+.icon {
+    width: 96%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
 input {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+.stopBtn {
+
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+    /* 轻微阴影效果 */
+    transition: box-shadow 0.3s ease;
+    /* 阴影过渡效果 */
+    cursor: pointer;
+
+    min-width: 90px;
+    display: flex;
+    justify-content: center;
+    border-radius: 24px;
+    height: 100%;
+}
+
+.stopBtn:hover {
+    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
+    /* 鼠标悬停时阴影加深 */
+}
+
+.stopBtn:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    /* 点击时阴影变浅 */
+    transform: translateY(1px);
+    /* 点击时按钮略微下移，增加交互感 */
 }
 
 button {
