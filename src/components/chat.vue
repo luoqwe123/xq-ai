@@ -1,14 +1,18 @@
 <template>
     <div class="chat-room">
-        <div class="chat-window" ref="chat">
-            <aiMessage style="margin-bottom: 10px;" />
-            <div class="messages">
-                <div v-for="(message, index) in messages" :key="index" :class="['message',]">
-                    <aiMessage v-if="message.sentBy == 'ai'" :content="message.content ? message.content : answer" />
-                    <span v-if="message.sentBy == 'user'" class="content">{{ message.content }}</span>
+        <div class="chat-window">
+            <div class="chatBox" ref="chat">
+                <div class="main">
+                    <aiMessage style="margin-bottom: 10px;" />
+                    <div class="messages">
+                        <div v-for="(message, index) in messages" :key="index" :class="['message',]">
+                            <aiMessage v-if="message.sentBy == 'ai'"
+                                :content="message.content ? message.content : answer" />
+                            <span v-if="message.sentBy == 'user'" class="content">{{ message.content }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p></p>
         </div>
         <div class="icon" @click="abortRequest" v-if="answer">
             <Svg name="stop" height="20px" width="20px" class="stopBtn">
@@ -20,7 +24,7 @@
         <div class="input-area">
             <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
             <button @click="sendMessage" :style="disabled ? setUnallowToBtn() : ''">Send</button>
-           
+
         </div>
     </div>
 </template>
@@ -54,7 +58,7 @@ const setUnallowToBtn = () => {
 
 const sendMessage = async () => {
 
-    
+
     // console.log("messages", messages.value)
     if (newMessage.value.trim() !== '') {
         messages.value.push({
@@ -72,11 +76,29 @@ const sendMessage = async () => {
 const chat = ref<any>(null);
 const abortController = ref<AbortController | null>(null)
 
+function debounce(fn: Function, delay: number) {
+    let timer: any
+    function doFn(this: any, ...args: any[]) {
+        let content: any = this
+
+
+        timer = setInterval(() => {
+            console.log(111)
+            fn.apply(content, args)
+        }, delay)
+    }
+    function stop() {
+        clearInterval(timer)
+    }
+    return { doFn, stop }
+}
+
 // 滚动到底部函数
 const scrollToBottom = () => {
     if (chat.value) {
-        let top = chat.value.scrollHeight + 100
-        // console.log("top", top, chat.value.scrollHeight)
+
+        let top = chat.value.scrollHeight
+        console.log("top", top, chat.value.scrollHeight)
         chat.value.scrollTop = top;
 
     }
@@ -109,6 +131,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         content: '',
     });
     const length = messages.value.length
+    const createDebounce = debounce(scrollToBottom, 1500)
     try {
         const response = await fetch('http://localhost:3000/ask', {
             method: 'POST',
@@ -123,18 +146,16 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         }
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        let flag = true
+        createDebounce.doFn()
         // Read the stream and display chunks as they arrive
         while (true) {
             const { done, value } = await reader.read();
             if (done) {
                 break;
             }
+
             answer.value += decoder.decode(value, { stream: true });
-            if (flag && answer.value) {
-                flag = false
-                scrollToBottom();
-            }
+
             // outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
         }
     } catch (error) {
@@ -143,9 +164,12 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     } finally {
         abortController.value = null;
         disabled.value = false; // Re-enable the button
+        messages.value[length - 1].content = answer.value
+        answer.value = ""
+        setTimeout(createDebounce.stop,1500)
+      
     }
-    messages.value[length - 1].content = answer.value
-    answer.value = ""
+
 }
 
 
@@ -161,15 +185,33 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     width: 100%;
     align-items: center;
     padding-top: 1rem;
+    overflow: hidden;
+
 }
 
 .chat-window {
     flex: 1;
-
-    overflow-y: auto;
     background-color: #fff;
-    width: 96%;
+    width: 100%;
 
+
+
+    overflow: hidden;
+
+}
+
+.chatBox {
+    background-color: #fff;
+    width: 100%;
+    height: calc(100% - 80px);
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.main {
+    height: 100%;
+    width: 96%;
 }
 
 .messages {
@@ -213,6 +255,9 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     background-color: #fff;
     border-top: 1.6px solid #ddd;
     width: 96%;
+    position: fixed;
+    bottom: 0px;
+    height: 58px;
 }
 
 .icon {
@@ -221,6 +266,8 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    position: fixed;
+    bottom: 58px;
 }
 
 input {
