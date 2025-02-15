@@ -14,7 +14,7 @@ import Avator from "@/../public/125.jpg"
 const prop = withDefaults(defineProps<{
     content?:string 
 }>(),{
-    content:"我是一个综合型助手小秋，不会的问题都可以来问我呦 ٩(๑❛ᴗ❛๑)۶"
+    content:"我是一个综合型助手 --小秋，不会的问题都可以来问我呦 ٩(๑❛ᴗ❛๑)۶"
 })
 
 </script>

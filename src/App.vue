@@ -8,7 +8,7 @@
 <script setup lang='ts'>
 
 import Chat from "@/components/chat.vue"
-import Header from "@/components/aiTro.vue"
+import Header from "@/components/aa.vue"
 
 </script>
 

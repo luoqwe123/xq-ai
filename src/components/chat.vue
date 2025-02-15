@@ -1,7 +1,8 @@
 <template>
     <div class="chat-room">
+        <Header style="width: 100%;margin-bottom: 10px;"></Header>
         <div class="chat-window">
-            <div class="chatBox" ref="chat">
+            <div class="chatBox" @wheel="handleScroll" ref="chat">
                 <div class="main">
                     <aiMessage style="margin-bottom: 10px;" />
                     <div class="messages">
@@ -14,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="icon" @click="abortRequest" v-if="answer">
+        <div class="stop" @click="abortRequest" v-if="answer">
             <Svg name="stop" height="20px" width="20px" class="stopBtn">
                 <template #content><span
                         style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
@@ -34,6 +35,7 @@
 import Svg from "@/components/svgComponent.vue"
 import { ref, watch } from 'vue';
 import aiMessage from './aiTro.vue';
+import Header from "./Header.vue";
 // import { askAi } from './chat';
 interface message {
     sentBy: string,
@@ -75,13 +77,12 @@ const sendMessage = async () => {
 };
 const chat = ref<any>(null);
 const abortController = ref<AbortController | null>(null)
+let createDebounce: any = ""
 
 function debounce(fn: Function, delay: number) {
     let timer: any
     function doFn(this: any, ...args: any[]) {
         let content: any = this
-
-
         timer = setInterval(() => {
             console.log(111)
             fn.apply(content, args)
@@ -131,7 +132,7 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         content: '',
     });
     const length = messages.value.length
-    const createDebounce = debounce(scrollToBottom, 1500)
+    createDebounce = debounce(scrollToBottom, 1000)
     try {
         const response = await fetch('http://localhost:3000/ask', {
             method: 'POST',
@@ -166,12 +167,19 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
         disabled.value = false; // Re-enable the button
         messages.value[length - 1].content = answer.value
         answer.value = ""
-        setTimeout(createDebounce.stop,1500)
-      
+        setTimeout(() => {
+            createDebounce.stop()
+            createDebounce = ''
+        }, 1500)
+
     }
 
 }
-
+function handleScroll(event: any) {
+    if (event.deltaY < 0 && createDebounce) {
+        createDebounce.stop()
+    }
+}
 
 </script>
 
@@ -258,9 +266,10 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     position: fixed;
     bottom: 0px;
     height: 58px;
+    z-index: 2;
 }
 
-.icon {
+.stop {
     width: 96%;
     height: 40px;
     display: flex;
@@ -268,6 +277,8 @@ async function askAi(question: string, disabled: any, messages: any, answer: any
     margin-bottom: 10px;
     position: fixed;
     bottom: 58px;
+    z-index: 2;
+
 }
 
 input {
@@ -284,7 +295,7 @@ input {
     transition: box-shadow 0.3s ease;
     /* 阴影过渡效果 */
     cursor: pointer;
-
+    background-color: white;
     min-width: 90px;
     display: flex;
     justify-content: center;

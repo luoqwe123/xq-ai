@@ -21,6 +21,9 @@ app/server/ai.js
 
 src/components/ai.vue
 src/components/aiMessage.vue
+src/components/aa.vue
+src/components/InlineDialog.vue
+
 
 /cypress/videos/
 /cypress/screenshots/

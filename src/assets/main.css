@@ -1,3 +1,8 @@
 @import './base.css';
-
-
+input{
+    outline-style: none;
+}
+select{
+    border: none;
+    outline-style: none;
+}

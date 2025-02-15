@@ -35,6 +35,10 @@
 
   --section-gap: 160px;
 }
+/* font */
+:root{
+  --font-sans:"Geist","Geist Fallback",Arial,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -58,7 +62,7 @@
   font-weight: normal;
 }
 
-body {
+/* body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
@@ -79,8 +83,8 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: 15px;
+  
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} */
