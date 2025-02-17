@@ -1,10 +1,11 @@
 <template>
     <div class="expansion-container">
         <div class="dialog-overlay" @click="handleClose"></div>
-        <div class="dialog-box" :style="isMobile ? mobileStyle() : computerStyle()">
+        <div class="dialog-box" :style="isMobile ? mobileStyle() : computerStyle()"
+            :class="isMobile ? 'slide-up' : 'fade-in '">
             <div class="dislog-header">
                 <input type="text" style="width: 80%;border: none;padding-left: 10px;height: 28px;"
-                    placeholder="请输入您想询问的问题...">
+                    placeholder="请输入您想询问的问题..." v-model="iptValue">
                 <button style="border: 1px solid #ebebeb;background-color: white;border-radius: 5px;">
                     <kbd style="font-family: var(--font-sans);font-size: 12px;">
                         <span :style="{ color: color }">Esc</span>
@@ -13,10 +14,21 @@
             </div>
             <div class="dialog-main">
                 <div class="suggestions"
-                    style="width: 100%;height: 32px;font-size: 12px;padding-left: 12px;line-height: 32px;"
+                    style="width: 100%;height: 32px;font-size: 12px;line-height: 32px;"
                     :style="{ color: color }">
-                    Suggestions
+                    {{ suggest }}
                 </div>
+                <template v-if="!messages.length">
+
+                    <div class="dialog-content" v-for="(item, index) in suggestionsArr" :key="index" @click="chat(item.content)">
+                        <Svg :name="item.icon"></Svg>
+                        <div style="font-size: 14px;color:#666666;margin-left: 12px;">{{ item.content }}</div>
+                    </div>
+                </template>
+                <template v-else>
+                    <aiMessage :content="messages[0].content"></aiMessage>
+                </template>
+
             </div>
         </div>
     </div>
@@ -24,6 +36,8 @@
 
 <script setup lang='ts'>
 import { defineEmits, onMounted, ref, } from 'vue';
+import Svg from '../svgComponent.vue';
+import aiMessage from '../aiTro.vue';
 
 import { useScreenSize } from "@/hooks/useScreenSize"
 withDefaults(defineProps<{
@@ -31,7 +45,9 @@ withDefaults(defineProps<{
 }>(), {
     color: "black"
 })
-
+const iptValue = ref('')
+const messages = ref<any[]>([])
+const suggest = ref<string>("Suggestions")
 
 let { isMobile } = useScreenSize()
 console.log(isMobile.value)
@@ -47,7 +63,8 @@ const mobileStyle = () => {
         'width': "100%",
         'left': "0px",
         "bottom": "0px",
-        "height": '80%'
+        "height": '80%',
+        "border-radius": "1rem 1rem 0 0"
     }
 }
 const computerStyle = () => {
@@ -61,12 +78,93 @@ const computerStyle = () => {
 }
 const suggestionsArr = ref<any[]>([
     {
-        icon:'',
-        content:""
+        icon: 'hi',
+        content: "你好"
+    },
+    {
+        icon: 'who',
+        content: "你是谁"
+    },
+    {
+        icon: 'help',
+        content: "你能做什么"
     }
+
 ])
+const disabled = ref<boolean>(false)
+async function askAi(question: string, disabled: any, messages: any,) {
 
+    if (!question) {
+        alert('Please enter a question!');
+        return;
+    }
+    // Disable the button while fetching response
+    disabled.value = true;
 
+    const length = messages.value.length
+
+    try {
+        const response = await fetch('http://localhost:3000/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ question }),
+
+        });
+        if (!response.body) {
+            throw new Error('No response body');
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        // Read the stream and display chunks as they arrive
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+
+            messages.value[length - 1].content += decoder.decode(value, { stream: true });
+
+            // outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
+    } finally {
+
+        disabled.value = false; // Re-enable the button
+    }
+
+}
+function chat(question:string) {
+   
+    if (!question) {
+        alert('Please enter a question!');
+        return;
+    }
+    suggest.value = question
+    if (!messages.value.length) {
+        messages.value.push({
+            sentBy: "ai",
+            content: ""
+        })
+    }else{
+        messages.value[0].content = ""
+    }
+    askAi(suggest.value, disabled, messages)
+}
+window.addEventListener('keydown', function (event) {
+    // 检查是否按下了Ctrl键和W键
+    if (event.key === 'Enter') {
+    
+        event.preventDefault();
+        chat(iptValue.value)
+
+    }
+
+});
 
 </script>
 
@@ -88,8 +186,10 @@ const suggestionsArr = ref<any[]>([
 }
 
 .dialog-main {
-   
-
+    overflow-y: scroll;
+    width: 100%;
+    height: calc(100% - 53px);
+    padding: 0px 12px
 }
 
 .dialog-box {
@@ -115,5 +215,50 @@ const suggestionsArr = ref<any[]>([
     height: 53px;
     justify-content: space-between;
     border-bottom: 1px solid #ebebeb;
+}
+
+.dialog-content {
+    display: flex;
+    align-items: center;
+    width: 96%;
+    height: 42px;
+    padding-left: 10px;
+    margin-left: 2%;
+    border-radius: 6px;
+
+
+}
+
+.dialog-content:hover {
+    background-color: #f2f2f2;
+}
+
+/* 对话框动画 */
+.slide-up {
+    animation: slide-up 0.3s ease-out;
+}
+
+.fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 </style>

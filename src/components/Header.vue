@@ -6,7 +6,7 @@
         <div class="right">
             <Contraction  backColor="white" color="#8f8f8f" @click="openExpansion"></Contraction >
         </div>
-        <Expansion v-if="expansion" @close-dialog="closeExpansion" color="#8f8f8f"></Expansion>
+        <Expansion v-if="expansion" @close-dialog="closeExpansion" color="#8f8f8f" ></Expansion>
     </div>
 </template>
 
@@ -15,31 +15,33 @@
 import Logo from "./logo.vue"
 import Contraction from "./inlineDialog/contraction.vue"
 import Expansion from "./inlineDialog/expansion.vue"
+
 import { ref } from "vue"
 
 
 const expansion = ref<boolean>(false)
 
+
 const openExpansion = ()=>{
     expansion.value = true    
 }
 // 添加一个事件监听器到window对象，监听keydown事件
-// window.addEventListener('keydown', function(event) {
-//     // 检查是否按下了Ctrl键和W键
+window.addEventListener('keydown', function(event) {
+    // 检查是否按下了Ctrl键和W键
    
-//     console.log(event.key)
-//      event.preventDefault();
-//     if (event.ctrlKey && event.key === 'k' || event.ctrlKey && event.key === 'k') {
-//         // 阻止默认的关闭标签页行为（在浏览器中Ctrl + W通常会关闭当前标签页）
-        
-//         // 打印"你好"
-//        openExpansion()
-//     }
-//     if(event.key === 'Escape' ){
-//         event.preventDefault();
-//         closeExpansion()
-//     }
-// });
+    
+    
+    if (event.ctrlKey && event.key === 'k' || event.ctrlKey && event.key === 'k') {
+        // 阻止默认的关闭标签页行为（在浏览器中Ctrl + W通常会关闭当前标签页）
+         event.preventDefault();
+        // 打印"你好"
+       openExpansion()
+    }
+    if(event.key === 'Escape' ){
+        event.preventDefault();
+        closeExpansion()
+    }
+});
 const closeExpansion = ()=>{
     expansion.value = false
 }

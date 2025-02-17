@@ -7,8 +7,10 @@
                     <aiMessage style="margin-bottom: 10px;" />
                     <div class="messages">
                         <div v-for="(message, index) in messages" :key="index" :class="['message',]">
+
                             <aiMessage v-if="message.sentBy == 'ai'"
                                 :content="message.content ? message.content : answer" />
+                                <!-- <MainMarkdownParser :data="message.content ? message.content : answer"></MainMarkdownParser> -->
                             <span v-if="message.sentBy == 'user'" class="content">{{ message.content }}</span>
                         </div>
                     </div>
@@ -17,8 +19,7 @@
         </div>
         <div class="stop" @click="abortRequest" v-if="answer">
             <Svg name="stop" height="20px" width="20px" class="stopBtn">
-                <template #content><span
-                        style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
+                <template #content><span style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
             </Svg>
         </div>
 
@@ -31,11 +32,12 @@
 </template>
 
 <script setup lang="ts">
-//问题 不想发送了，中断生成，输入框
+
 import Svg from "@/components/svgComponent.vue"
 import { ref, watch } from 'vue';
 import aiMessage from './aiTro.vue';
 import Header from "./Header.vue";
+import MainMarkdownParser from "./MainMarkdownParser.vue";
 // import { askAi } from './chat';
 interface message {
     sentBy: string,
@@ -109,7 +111,7 @@ const scrollToBottom = () => {
 
 //     scrollToBottom();
 // });
-const abortRequest = () => {
+const abortRequest = () => { 
     if (abortController.value) {
         abortController.value.abort(); // 中止请求
         abortController.value = null; // 清空引用
