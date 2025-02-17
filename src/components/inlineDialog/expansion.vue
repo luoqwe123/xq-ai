@@ -138,13 +138,16 @@ async function askAi(question: string, disabled: any, messages: any,) {
     }
 
 }
-function chat(question:string) {
-   
-    if (!question) {
+function chat(question:string|void) {
+    if(question){
+        iptValue.value = question 
+    }
+    if (!iptValue.value) {
         alert('Please enter a question!');
         return;
     }
-    suggest.value = question
+    suggest.value = iptValue.value
+    iptValue.value = ""
     if (!messages.value.length) {
         messages.value.push({
             sentBy: "ai",
@@ -160,7 +163,10 @@ window.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
     
         event.preventDefault();
-        chat(iptValue.value)
+        setTimeout(()=>{
+            chat()
+        },1000)
+        
 
     }
 
