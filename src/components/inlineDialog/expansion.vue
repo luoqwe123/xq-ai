@@ -38,6 +38,7 @@
 import { defineEmits, onMounted, ref, } from 'vue';
 import Svg from '../svgComponent.vue';
 import aiMessage from '../aiTro.vue';
+import { askAi } from '@/utils/request';
 
 import { useScreenSize } from "@/hooks/useScreenSize"
 withDefaults(defineProps<{
@@ -92,52 +93,6 @@ const suggestionsArr = ref<any[]>([
 
 ])
 const disabled = ref<boolean>(false)
-async function askAi(question: string, disabled: any, messages: any,) {
-
-    if (!question) {
-        alert('Please enter a question!');
-        return;
-    }
-    // Disable the button while fetching response
-    disabled.value = true;
-
-    const length = messages.value.length
-
-    try {
-        const response = await fetch('http://localhost:3000/ask', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ question }),
-
-        });
-        if (!response.body) {
-            throw new Error('No response body');
-        }
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-
-        // Read the stream and display chunks as they arrive
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-                break;
-            }
-
-            messages.value[length - 1].content += decoder.decode(value, { stream: true });
-
-            // outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
-    } finally {
-
-        disabled.value = false; // Re-enable the button
-    }
-
-}
 function chat(question:string|void) {
     if(question){
         iptValue.value = question 
@@ -166,10 +121,7 @@ window.addEventListener('keydown', function (event) {
         setTimeout(()=>{
             chat()
         },1000)
-        
-
     }
-
 });
 
 </script>
