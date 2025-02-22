@@ -12,14 +12,19 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.6",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
+    "marked": "^15.0.7",
     "pinia": "^2.3.1",
+    "tailwindcss": "^4.0.6",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
     "@types/jsdom": "^21.1.7",
+    "@types/markdown-it": "^14.1.2",
+    "@types/marked": "^6.0.0",
     "@types/node": "^22.10.7",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/test-utils": "^2.4.6",

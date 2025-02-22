@@ -7,47 +7,56 @@
                     <aiMessage style="margin-bottom: 10px;" />
                     <div class="messages">
                         <div v-for="(message, index) in messages" :key="index" :class="['message',]">
-                            <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" />
+                            <!-- <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" /> -->
+                            <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content">
+                            </MainMarkdownParser>
                             <span v-if="message.sentBy == 'user'" class="content">{{ message.content }}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="stop" @click="abortRequest(isReply)" v-if="isReply">
+        <div class="stop" @click="abortRequest(isReply)" v-if="isReply" :style="{bottom: stopBottom+'px'}">
             <Svg name="stop" height="20px" width="20px" class="stopBtn">
                 <template #content><span
                         style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
             </Svg>
         </div>
-        <div class="input-area">
-            <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
-            <button @click="sendMessage" :style="disabled ? setUnallowToBtn() : ''">Send</button>
+        <xqInput class="input-area" :set-input-entry="setInputEntry" @enter="sendMessage" v-model:model-value="newMessage" v-model:stop-bottom="stopBottom"></xqInput>
+        <!-- <div class="input-area" ref="inputArea">
+            <textarea v-model="newMessage" @keyup.enter="sendMessage" @input="handleInput"
+                placeholder="Type a message..." row="1" class="text"></textarea>
+            
 
-        </div>
+        </div> -->
+
+        <!-- <button @click="sendMessage" :style="disabled ? setUnallowToBtn() : ''">Send</button> -->
     </div>
 </template>
 
 <script setup lang="ts">
 
 import Svg from "@/components/svgComponent.vue"
-import { ReactiveFlags, ref, watch } from 'vue';
+import { ReactiveFlags, ref, watch, watchEffect } from 'vue';
 import aiMessage from './aiTro.vue';
 import Header from "./Header.vue";
 import MainMarkdownParser from "./MainMarkdownParser.vue";
 import { askAi, abortRequest } from "@/utils/request";
+import xqMark from "./xqMarkdown.vue"
+import xqInput from "./xqInput.vue";
 
 interface message {
     sentBy: string,
     content: string
 }
 const newMessage = ref('');
+const setInputEntry = ref<boolean>(false)
 let isReply = ref<boolean>(false)
 let disabled = ref(false)
 let createDebounce: any = ""
+const stopBottom = ref(80)
 const messages = ref<any>([
     // { sentBy: 'ai', content: '我是一个综合型助手小秋，不会的问题都可以来问我呦 ٩(๑❛ᴗ❛๑)۶' },
-
 ]);
 const setUnallowToBtn = () => {
     return {
@@ -58,6 +67,7 @@ const setUnallowToBtn = () => {
 
 const sendMessage = async () => {
     // console.log("messages", messages.value)
+ 
     if (newMessage.value.trim() !== '') {
         messages.value.push({
             sentBy: 'user',
@@ -66,7 +76,7 @@ const sendMessage = async () => {
 
     }
     let question = newMessage.value
-    newMessage.value = '';
+    setInputEntry.value = true
     isReply.value = true
     messages.value.push({
         sentBy: 'ai',
@@ -89,7 +99,6 @@ function debounce(fn: Function, delay: number) {
     function doFn(this: any, ...args: any[]) {
         let content: any = this
         timer = setInterval(() => {
-            console.log(111)
             fn.apply(content, args)
         }, delay)
     }
@@ -132,18 +141,14 @@ function handleScroll(event: any) {
     align-items: center;
     padding-top: 1rem;
     overflow: hidden;
-
+    padding: 0px;
 }
 
 .chat-window {
     flex: 1;
     background-color: #fff;
     width: 100%;
-
-
-
     overflow: hidden;
-
 }
 
 .chatBox {
@@ -203,8 +208,9 @@ function handleScroll(event: any) {
     width: 96%;
     position: fixed;
     bottom: 0px;
-    height: 58px;
+    height: 80px;
     z-index: 2;
+
 }
 
 .stop {
@@ -214,17 +220,12 @@ function handleScroll(event: any) {
     justify-content: center;
     margin-bottom: 10px;
     position: fixed;
-    bottom: 58px;
+    /* bottom: 58px; */
     z-index: 2;
 
 }
 
-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+
 
 .stopBtn {
 
@@ -253,8 +254,8 @@ input {
     /* 点击时按钮略微下移，增加交互感 */
 }
 
-button {
-    padding: 10px 20px;
+/* button {
+    padding: 0px 20px;
     margin-left: 10px;
     border: none;
     background-color: #4caf50;
@@ -265,5 +266,5 @@ button {
 
 button:hover {
     background-color: #45a049;
-}
+} */
 </style>

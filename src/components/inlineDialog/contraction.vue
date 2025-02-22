@@ -27,7 +27,7 @@ withDefaults(defineProps<{
 })
 </script>
 
-<style>
+<style scoped>
 .contraction-container {
     height: 100%;
     width: 100%;

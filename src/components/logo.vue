@@ -30,7 +30,7 @@ const handleSelectChange = () => {
 
 </script>
 
-<style>
+<style scoped>
 .logo-container{
     display: flex;
     align-items: center;

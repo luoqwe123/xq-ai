@@ -1,4 +1,6 @@
 @import './base.css';
+@import "tailwindcss";
+@import 'highlight.js/styles/tokyo-night-dark.css'; /* 代码高亮 */
 input{
     outline-style: none;
 }

@@ -4,7 +4,7 @@
         <div class="dialog-box" :style="isMobile ? mobileStyle() : computerStyle()"
             :class="isMobile ? 'slide-up' : 'fade-in '">
             <div class="dislog-header">
-                <input type="text" style="width: 80%;border: none;padding-left: 10px;height: 28px;"
+                <input type="text" @keyup.enter="chat()" style="width: 80%;border: none;padding-left: 10px;height: 28px;"
                     placeholder="请输入您想询问的问题..." v-model="iptValue">
                 <button style="border: 1px solid #ebebeb;background-color: white;border-radius: 5px;">
                     <kbd style="font-family: var(--font-sans);font-size: 12px;">
@@ -19,7 +19,6 @@
                     {{ suggest }}
                 </div>
                 <template v-if="!messages.length">
-
                     <div class="dialog-content" v-for="(item, index) in suggestionsArr" :key="index" @click="chat(item.content)">
                         <Svg :name="item.icon"></Svg>
                         <div style="font-size: 14px;color:#666666;margin-left: 12px;">{{ item.content }}</div>
@@ -46,6 +45,7 @@ withDefaults(defineProps<{
 }>(), {
     color: "black"
 })
+
 const iptValue = ref('')
 const messages = ref<any[]>([])
 const suggest = ref<string>("Suggestions")
@@ -113,20 +113,11 @@ function chat(question:string|void) {
     }
     askAi(suggest.value, disabled, messages)
 }
-window.addEventListener('keydown', function (event) {
-    // 检查是否按下了Ctrl键和W键
-    if (event.key === 'Enter') {
-    
-        event.preventDefault();
-        setTimeout(()=>{
-            chat()
-        },1000)
-    }
-});
+
 
 </script>
 
-<style>
+<style scoped>
 .expansion-container {
     width: 120%;
     height: 200vh;

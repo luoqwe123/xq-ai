@@ -26,7 +26,7 @@ withDefaults(defineProps<{
 })
 </script>
 
-<style >
+<style scoped>
 .svg-container{
     display: flex;
     align-items: center;

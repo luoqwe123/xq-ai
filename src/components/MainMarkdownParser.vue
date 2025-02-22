@@ -1,10 +1,18 @@
 <template>
-    <div v-html="htmlContent" @click="handleCopy"></div>
+    <div class="aiTro-container">
+        <div class="header">
+            <img :src="Avator" alt="这是ai的头像" style="width: 36px;height: 36px;border-radius: 50%;margin-right: 0.3rem;">
+            <div class="text" style="line-height: 36px;">小秋</div>
+        </div>
+        <div v-html="htmlContent" @click="handleCopy" ></div>
+    </div>
 </template>
+
 
 <script setup lang="ts">
 // 未实现
 // 数学及化学公式
+import Avator from "@/../public/125.jpg"
 import { computed } from 'vue';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
@@ -15,7 +23,7 @@ const props = withDefaults(defineProps<{
 const md = new MarkdownIt({
     linkify: true,    // 自动识别 URL 为链接
     typographer: true, // 启用一些语言中立的替换和引号美化
-    breaks: true,
+    breaks: true,                          
     highlight: function (str: string, lang: string): string {
         const trimmedStr = str.trim(); // 清除首尾空白
         if (lang && hljs.getLanguage(lang)) {
@@ -68,6 +76,17 @@ const handleCopy = async (e: MouseEvent) => {
 </script>
 
 <style scoped>
+.aiTro-container{
+    width: 100%;
+    background-color: #e0e0e0;
+    padding: 8px 12px;
+    min-height: 76px;
+    border-radius: 6px;
+}
+.header{
+    display: flex;
+    
+}
 :deep(h1) {
     font-size: 2em;
     border-bottom: 1px solid #caced5;

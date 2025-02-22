@@ -19,7 +19,7 @@ const prop = withDefaults(defineProps<{
 
 </script>
 
-<style>
+<style scoped>
 
 .aiTro-container{
     width: 100%;

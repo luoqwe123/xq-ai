@@ -48,7 +48,7 @@ const closeExpansion = ()=>{
 
 </script>
 
-<style>
+<style scoped>
 .Header-container{
     display: flex;
     justify-content: space-between;

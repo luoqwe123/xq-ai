@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="app-container">
         <Chat/>
         
     </div>
@@ -9,11 +9,12 @@
 
 import Chat from "@/components/chat.vue"
 import Header from "@/components/aa.vue"
+import xqInput from "./components/xqInput.vue";
 
 </script>
 
-<style>
-.container{
+<style scoped>
+.app-container{
     width: 100%;
 }
 
