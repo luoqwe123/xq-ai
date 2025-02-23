@@ -3,7 +3,9 @@ const OpenAI = require("openai");
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require('multer');
 const app = express();
+
 const port = 3000;
 const openai = new OpenAI({
     baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
@@ -12,17 +14,23 @@ const openai = new OpenAI({
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.json());
+
+const upload = multer();
 // app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware for JSON body parsing and enabling CORS
 // app.use(bodyParser.json());
 app.use(cors());
 // Endpoint to handle question from the front-end
-app.post('/ask', async (req, res) => {
+app.post('/ask',upload.none(), async (req, res) => {
     console.log(req.body)
     const userQuestion = req.body.question;
+    
     if (!userQuestion) {
-        return res.status(400).json({ error: "Question is required!" });
+        return res.status(400).json( "Question is required!" );
+    }
+    if(req.body.files){
+        return res.status(400).json("暂时不支持文件😅!" );
     }
     try {
         console.log(userQuestion)
