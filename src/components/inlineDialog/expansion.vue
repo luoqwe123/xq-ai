@@ -92,7 +92,7 @@ const suggestionsArr = ref<any[]>([
     }
 
 ])
-const disabled = ref<boolean>(false)
+
 function chat(question:string|void) {
     if(question){
         iptValue.value = question 
@@ -111,7 +111,7 @@ function chat(question:string|void) {
     }else{
         messages.value[0].content = ""
     }
-    askAi(suggest.value, disabled, messages)
+    askAi({text:suggest.value},true ,messages)
 }
 
 

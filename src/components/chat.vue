@@ -6,23 +6,25 @@
                 <div class="main">
                     <aiMessage style="margin-bottom: 10px;" />
                     <div class="messages">
-                        <div v-for="(message, index) in messages" :key="index" :class="['message',]">
+                        <div v-for="(message, index) in dataListStore.messages" :key="index" :class="['message',]">
                             <!-- <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" /> -->
-                            <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content">
+                            <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content.text">
                             </MainMarkdownParser>
-                            <span v-if="message.sentBy == 'user'" class="content">{{ message.content }}</span>
+                            <span v-if="message.sentBy == 'user'" class="content">{{ message.content.text }}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="stop" @click="abortRequest(isReply)" v-if="isReply" :style="{bottom: stopBottom+'px'}">
+        <div class="stop" @click="abortRequest(dataListStore.changeStopState)" v-if="dataListStore.useStopComp"
+            :style="{ bottom: stopBottom + 'px' }">
             <Svg name="stop" height="20px" width="20px" class="stopBtn">
                 <template #content><span
                         style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
             </Svg>
         </div>
-        <xqInput class="input-area" :set-input-entry="setInputEntry" @enter="sendMessage" v-model:model-value="newMessage" v-model:stop-bottom="stopBottom"></xqInput>
+        <xqInput class="input-area" :set-input-entry="setInputEntry" @enter="sendMessage"
+            v-model:model-value="newMessage" v-model:stop-bottom="stopBottom"></xqInput>
         <!-- <div class="input-area" ref="inputArea">
             <textarea v-model="newMessage" @keyup.enter="sendMessage" @input="handleInput"
                 placeholder="Type a message..." row="1" class="text"></textarea>
@@ -44,7 +46,8 @@ import MainMarkdownParser from "./MainMarkdownParser.vue";
 import { askAi, abortRequest } from "@/utils/request";
 import xqMark from "./xqMarkdown.vue"
 import xqInput from "./xqInput.vue";
-
+import { useAiStore } from "@/stores/aiAnswer";
+const dataListStore = useAiStore()
 interface message {
     sentBy: string,
     content: string
@@ -52,7 +55,7 @@ interface message {
 const newMessage = ref('');
 const setInputEntry = ref<boolean>(false)
 let isReply = ref<boolean>(false)
-let disabled = ref(false)
+
 let createDebounce: any = ""
 const stopBottom = ref(80)
 const messages = ref<any>([
@@ -67,32 +70,36 @@ const setUnallowToBtn = () => {
 
 const sendMessage = async () => {
     // console.log("messages", messages.value)
- 
-    if (newMessage.value.trim() !== '') {
-        messages.value.push({
-            sentBy: 'user',
-            content: newMessage.value,
-        });
 
-    }
-    let question = newMessage.value
-    setInputEntry.value = true
-    isReply.value = true
-    messages.value.push({
-        sentBy: 'ai',
-        content: '',
-    });
+    // if (newMessage.value.trim() !== '') {
+    //     messages.value.push({
+    //         sentBy: 'user',
+    //         content: newMessage.value,
+    //     });
+    // }
+    // let question = newMessage.value
+    // setInputEntry.value = true
+    // isReply.value = true
+    // messages.value.push({
+    //     sentBy: 'ai',
+    //     content: '',
+    // });
     createDebounce = debounce(scrollToBottom, 1000)
     createDebounce.doFn()
-    await askAi(question, disabled, messages)
-    isReply.value = false
-    setTimeout(() => {
-        createDebounce.stop()
-        createDebounce = ''
-    }, 1500)
+    // await askAi({text:question,}, messages)
+    // isReply.value = false
+
 
 
 };
+watchEffect(() => {
+    if (dataListStore.isfinish && createDebounce) {
+        setTimeout(() => {
+            createDebounce.stop()
+            createDebounce = ''
+        }, 1500)
+    }
+})
 const chat = ref<any>(null);
 function debounce(fn: Function, delay: number) {
     let timer: any
@@ -111,11 +118,9 @@ function debounce(fn: Function, delay: number) {
 // 滚动到底部函数
 const scrollToBottom = () => {
     if (chat.value) {
-
         let top = chat.value.scrollHeight
-        console.log("top", top, chat.value.scrollHeight)
+        //console.log("top", top, chat.value.scrollHeight)
         chat.value.scrollTop = top;
-
     }
 };
 // 监听聊天消息数组的变化

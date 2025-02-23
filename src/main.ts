@@ -8,7 +8,7 @@ import Svg from "@/components/svgComponent.vue"
 
 
 const app = createApp(App)
-app.component("Svg",Svg)
-app.use(createPinia())
 
+app.use(createPinia())
+app.component("Svg",Svg)
 app.mount('#app')

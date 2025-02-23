@@ -42,6 +42,9 @@
 
 <script setup lang='ts'>
 import { computed, ref, defineEmits, watch, watchEffect, toValue } from 'vue';
+import { useAiStore } from '@/stores/aiAnswer';
+import { askAi } from '@/utils/request';
+const dataListStore = useAiStore()
 const props = withDefaults(defineProps<{
     setInputEntry?: boolean
 }>(), {
@@ -54,9 +57,8 @@ interface MediaFile {
     file: File;
 }
 
-const textInput = ref<string>('');
+
 const mediaFiles = ref<MediaFile[]>([]);
-const showFileInput = ref<boolean>(false);
 const fileInputRef = ref<HTMLInputElement | null>(null);
 const inputArea = ref<any>(null)
 const newMessage = ref('');
@@ -66,16 +68,33 @@ const Oldscroll = ref(34)
 const emit = defineEmits(['update:modelValue', 'enter', 'update:stopBottom']);
 watchEffect(() => {
     emit("update:modelValue", newMessage.value)
-    props.setInputEntry && (newMessage.value = '')
+    if (props.setInputEntry) {
+        newMessage.value = ''
+        if (mediaFiles.value.length) {
+            mediaFiles.value.forEach((el, index) => {
+                removeFile(el, index)
+            });
+        }
+    }
 
 })
-const send = (event: any) => {
+const send = async(event: any) => {
     if (event.code == 'Enter') {
         event.preventDefault()
     }
+    const formdata = {
+        text: newMessage.value,
+        files:mediaFiles.value
+    }
+    dataListStore.addQuestion(formdata)
+    dataListStore.changeStopState()
     emit("enter")
+    await askAi(formdata,false)
+    if(dataListStore.useStopComp){
+        dataListStore.changeStopState()
+    }
+    
     emit("update:stopBottom", stopBottom.value)
-
 }
 const handleInput = (e: any) => {
     const el = e.target;
@@ -97,7 +116,7 @@ const isImage = (file: File): boolean => {
 
     return imageMimeTypes.includes(file.type);
 };
-const validtorFile = (Filesize:number) => {
+const validtorFile = (Filesize: number) => {
     return Filesize > 5 * 1024 * 1024;
 }
 const handleFileUpload = (event: Event) => {
@@ -108,13 +127,13 @@ const handleFileUpload = (event: Event) => {
         return
     }
     if (files) {
-
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            if(validtorFile(file.size)){ 
+            if (validtorFile(file.size)) {
                 alert("输入的文件不能超过5mb")
                 return
             }
+
             const url = URL.createObjectURL(file);
             mediaFiles.value.push({
                 name: file.name,
@@ -126,7 +145,6 @@ const handleFileUpload = (event: Event) => {
     if (mediaFiles.value.length === 1) {
         stopBottom.value = stopBottom.value + 50
         inputArea.value.style.height = stopBottom.value + 'px'
-        console.log(111)
     }
 
     // 重置文件输入（可选，但通常是个好习惯）

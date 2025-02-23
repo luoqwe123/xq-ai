@@ -9,12 +9,17 @@ const openai = new OpenAI({
     baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
     apiKey: process.env.OPENAI_API_KEY
 });
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 // Middleware for JSON body parsing and enabling CORS
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(cors());
 // Endpoint to handle question from the front-end
 app.post('/ask', async (req, res) => {
+    console.log(req.body)
     const userQuestion = req.body.question;
     if (!userQuestion) {
         return res.status(400).json({ error: "Question is required!" });
