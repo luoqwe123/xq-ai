@@ -3,11 +3,13 @@ const OpenAI = require("openai");
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require('multer');
+const upload = multer();
 const app = express();
 const port = 3000;
 const openai = new OpenAI({
     baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: "968e9f77-9390-4d5e-8290-2b7c0d96b1bb"
 });
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
@@ -18,8 +20,9 @@ app.use(express.json());
 // app.use(bodyParser.json());
 app.use(cors());
 // Endpoint to handle question from the front-end
-app.post('/ask', async (req, res) => {
+app.post('/ask', upload.none() ,async (req, res) => {
     console.log(req.body)
+    
     const userQuestion = req.body.question;
     if (!userQuestion) {
         return res.status(400).json({ error: "Question is required!" });
