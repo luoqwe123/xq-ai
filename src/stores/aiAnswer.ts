@@ -35,6 +35,7 @@ export const useAiStore = defineStore("aiStore", () => {
         messages.value[messages.value.length-1].content.text += value
     }
     const changeStopState = ()=>{
+        console.log(useStopComp.value)
         useStopComp.value = !useStopComp.value
     }
     const changeFinish = ()=>{

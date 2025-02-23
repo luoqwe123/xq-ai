@@ -19,7 +19,6 @@
                             <div class="props" style="display: flex;align-items: center;margin-left: 3px;">
                                 {{ media.name }}
                             </div>
-
                         </div>
                         <button style="border-radius: 50%;position: absolute;right: 0px;top: 0px;height: 24px;width: 24px;
                     display: flex;justify-content: center;align-items: center; transform: translate(25%,-25%);
@@ -46,9 +45,9 @@ import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
 const dataListStore = useAiStore()
 const props = withDefaults(defineProps<{
-    setInputEntry?: boolean
+
 }>(), {
-    setInputEntry: false
+
 })
 // 定义媒体文件类型
 interface MediaFile {
@@ -66,34 +65,28 @@ const stopBottom = ref(80)
 const Oldscroll = ref(34)
 
 const emit = defineEmits(['update:modelValue', 'enter', 'update:stopBottom']);
-watchEffect(() => {
-    emit("update:modelValue", newMessage.value)
-    if (props.setInputEntry) {
-        newMessage.value = ''
-        if (mediaFiles.value.length) {
-            mediaFiles.value.forEach((el, index) => {
-                removeFile(el, index)
-            });
-        }
-    }
-
-})
-const send = async(event: any) => {
+const send = async (event: any) => {
     if (event.code == 'Enter') {
         event.preventDefault()
     }
+    console.log(mediaFiles.value)
     const formdata = {
         text: newMessage.value,
-        files:mediaFiles.value
+        files: mediaFiles.value.map((el) => el)
     }
+    newMessage.value = ''
+    mediaFiles.value = []
+    // mediaFiles.value.forEach((el, index) => {
+    //     removeFile(el, index)
+    // });
+    console.log(formdata)
     dataListStore.addQuestion(formdata)
     dataListStore.changeStopState()
     emit("enter")
-    await askAi(formdata,false)
-    if(dataListStore.useStopComp){
+    await askAi(formdata, false)
+    if (dataListStore.useStopComp) {
         dataListStore.changeStopState()
     }
-    
     emit("update:stopBottom", stopBottom.value)
 }
 const handleInput = (e: any) => {

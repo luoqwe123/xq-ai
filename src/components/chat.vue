@@ -10,7 +10,14 @@
                             <!-- <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" /> -->
                             <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content.text">
                             </MainMarkdownParser>
-                            <span v-if="message.sentBy == 'user'" class="content">{{ message.content.text }}</span>
+                            <div class="question content" style="display: flex;flex-direction: column;">
+                                <span v-if="message.sentBy == 'user'" >{{ message.content.text }}</span>
+                                <div class="image" style="display: flex;">
+                                    <img v-for="(item,index) in message.content.files" :src="item.url" alt="" :key="index" style="height: 50px;width: 50px;border-radius: 10px;margin-right: 6px;">
+                                </div>
+                               
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -23,8 +30,8 @@
                         style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
             </Svg>
         </div>
-        <xqInput class="input-area" :set-input-entry="setInputEntry" @enter="sendMessage"
-            v-model:model-value="newMessage" v-model:stop-bottom="stopBottom"></xqInput>
+        <xqInput class="input-area"  @enter="sendMessage"
+            v-model:stop-bottom="stopBottom"></xqInput>
         <!-- <div class="input-area" ref="inputArea">
             <textarea v-model="newMessage" @keyup.enter="sendMessage" @input="handleInput"
                 placeholder="Type a message..." row="1" class="text"></textarea>
@@ -52,10 +59,6 @@ interface message {
     sentBy: string,
     content: string
 }
-const newMessage = ref('');
-const setInputEntry = ref<boolean>(false)
-let isReply = ref<boolean>(false)
-
 let createDebounce: any = ""
 const stopBottom = ref(80)
 const messages = ref<any>([
@@ -88,8 +91,6 @@ const sendMessage = async () => {
     createDebounce.doFn()
     // await askAi({text:question,}, messages)
     // isReply.value = false
-
-
 
 };
 watchEffect(() => {
