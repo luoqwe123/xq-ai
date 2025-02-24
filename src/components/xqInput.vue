@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang='ts'>
+//bug  输入框删除了文本，输入框高度的回去
 import { computed, ref, defineEmits, watch, watchEffect, toValue } from 'vue';
 import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
@@ -96,10 +97,11 @@ const handleInput = (e: any) => {
     el.style.height = 'auto'; // 根据内容自动调整高度
     const scrollHeight = el.scrollHeight;
     el.style.height = `${scrollHeight}px`;
-    if (Oldscroll.value < scrollHeight) {
-        stopBottom.value = scrollHeight + stopBottom.value - Oldscroll.value
-        inputArea.value.style.height = stopBottom.value + 'px'
-    }
+
+    stopBottom.value = scrollHeight + stopBottom.value - Oldscroll.value
+    inputArea.value.style.height = stopBottom.value + 'px'
+
+
     Oldscroll.value = scrollHeight
 }
 
