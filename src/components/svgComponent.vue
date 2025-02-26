@@ -24,6 +24,7 @@ withDefaults(defineProps<{
     height:'18px',
     fill:"black",
 })
+
 </script>
 
 <style scoped>

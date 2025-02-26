@@ -8,7 +8,7 @@
 <script setup lang='ts'>
 
 import Chat from "@/components/chat.vue"
-import Header from "@/components/aa.vue"
+import Header from "@/components/onlyTestCom/aa.vue"
 import xqInput from "./components/xqInput.vue";
 
 </script>

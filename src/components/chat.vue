@@ -51,7 +51,7 @@ import aiMessage from './aiTro.vue';
 import Header from "./Header.vue";
 import MainMarkdownParser from "./MainMarkdownParser.vue";
 import { askAi, abortRequest } from "@/utils/request";
-import xqMark from "./xqMarkdown.vue"
+
 import xqInput from "./xqInput.vue";
 import { useAiStore } from "@/stores/aiAnswer";
 const dataListStore = useAiStore()

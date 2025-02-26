@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang='ts'>
+import  Svg from "@/components/svgComponent.vue"
 withDefaults(defineProps<{
     backColor?: string
     color?: string
@@ -25,6 +26,7 @@ withDefaults(defineProps<{
     backColor: 'black',
     color:"black"
 })
+
 </script>
 
 <style scoped>

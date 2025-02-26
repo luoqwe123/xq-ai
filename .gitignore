@@ -19,10 +19,8 @@ app/server/node_modules
 app/server/ai.js
 
 
-src/components/ai.vue
-src/components/aiMessage.vue
-src/components/aa.vue
-src/components/InlineDialog.vue
+src/components/onlyTestCom
+
 
 
 /cypress/videos/
