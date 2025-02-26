@@ -15,6 +15,8 @@ export default mergeConfig(
         include: ['src/*'],//['src/*.{ts,js,vue}'], // 包含需要测试覆盖率的文件类型
         exclude: [
           'src/components/onlyTestCom', // 排除组件 b 的文件
+          'src/main.ts',
+          'src/App.vue'
         ],
       },
     },

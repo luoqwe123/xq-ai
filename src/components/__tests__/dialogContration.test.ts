@@ -9,7 +9,7 @@ import  Svg from "@/components/svgComponent.vue"
 //   // ...
 // });
 
-test('ContractionButton renders with correct styles when props are passed', async () => {
+test('dialogContraction renders with correct styles when props are passed', async () => {
     const backColor = '#ff0000'; // 红色
     const color = '#00ff00'; // 绿色
     const wrapper = mount(ContractionButton, {
