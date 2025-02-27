@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import HeaderComponent from '@/components/header.vue'; // Adjust the path to your component
+import HeaderComponent from '@/components/Header.vue'; // Adjust the path to your component
 import Expansion from "@/components/inlineDialog/expansion.vue";
 import Contraction from "@/components/inlineDialog/contraction.vue";
 import { nextTick } from 'vue';

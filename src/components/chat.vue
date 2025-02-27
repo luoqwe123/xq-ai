@@ -2,7 +2,7 @@
     <div class="chat-room">
         <Header style="width: 100%;margin-bottom: 10px;"></Header>
         <div class="chat-window">
-            <div class="chatBox" @wheel="handleScroll" ref="chat">
+            <div class="chatBox" @wheel="stopScroll" ref="chat">
                 <div class="main">
                     <aiMessage style="margin-bottom: 10px;" />
                     <div class="messages">
@@ -48,7 +48,7 @@
 import Svg from "@/components/svgComponent.vue"
 import { ReactiveFlags, ref, watch, watchEffect } from 'vue';
 import aiMessage from './aiTro.vue';
-import Header from "./Header.vue";
+import Header from "@/components/Header.vue";
 import MainMarkdownParser from "./MainMarkdownParser.vue";
 import { askAi, abortRequest } from "@/utils/request";
 
@@ -64,12 +64,12 @@ const stopBottom = ref(80)
 const messages = ref<any>([
     // { sentBy: 'ai', content: '我是一个综合型助手小秋，不会的问题都可以来问我呦 ٩(๑❛ᴗ❛๑)۶' },
 ]);
-const setUnallowToBtn = () => {
-    return {
-        cursor: "not-allowed",
-        backgroundColor: "#e0e0e0"
-    }
-}
+// const setUnallowToBtn = () => {
+//     return {
+//         cursor: "not-allowed",
+//         backgroundColor: "#e0e0e0"
+//     }
+// }
 
 const sendMessage = async () => {
     // console.log("messages", messages.value)
@@ -104,6 +104,7 @@ watchEffect(() => {
 const chat = ref<any>(null);
 function debounce(fn: Function, delay: number) {
     let timer: any
+   
     function doFn(this: any, ...args: any[]) {
         let content: any = this
         timer = setInterval(() => {
@@ -119,6 +120,7 @@ function debounce(fn: Function, delay: number) {
 // 滚动到底部函数
 const scrollToBottom = () => {
     if (chat.value) {
+        
         let top = chat.value.scrollHeight
         //console.log("top", top, chat.value.scrollHeight)
         chat.value.scrollTop = top;
@@ -129,9 +131,12 @@ const scrollToBottom = () => {
 
 //     scrollToBottom();
 // });
-function handleScroll(event: any) {
+function stopScroll(event: any) {
     if (event.deltaY < 0 && createDebounce) {
+        
         createDebounce.stop()
+        
+
     }
 }
 </script>
