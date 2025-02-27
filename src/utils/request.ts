@@ -53,7 +53,7 @@ async function askAi(question: question, expand: boolean, messages?: any) {
         if (!response.body) {
             throw new Error('No response body');
         }
-        console.log(response)
+        // console.log(response)
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 

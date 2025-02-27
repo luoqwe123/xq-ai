@@ -115,13 +115,13 @@ const validtorFile = (Filesize: number) => {
     return Filesize > 5 * 1024 * 1024;
 }
 const handleFileUpload = (event: Event) => {
+    // console.log('url',event)
     const target = event.target as HTMLInputElement;
     const files = target.files;
-    if (mediaFiles.value.length > 5) {
-        alert("输入的文件不能超过5个")
-        return
-    }
+
+
     if (files) {
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             if (validtorFile(file.size)) {
@@ -130,13 +130,19 @@ const handleFileUpload = (event: Event) => {
             }
 
             const url = URL.createObjectURL(file);
+            if (mediaFiles.value.length >= 5) {
+                alert("输入的文件不能超过5个")
+                break
+            }
             mediaFiles.value.push({
                 name: file.name,
                 url,
                 file,
             });
+
         }
     }
+    console.log("test", mediaFiles.value.length)
     if (mediaFiles.value.length === 1) {
         stopBottom.value = stopBottom.value + 50
         inputArea.value.style.height = stopBottom.value + 'px'
@@ -152,6 +158,7 @@ const triggerFileInput = () => {
 }
 const removeFile = (el: any, index: number) => {
     URL.revokeObjectURL(el.url)
+
     mediaFiles.value.splice(index, 1)
     if (mediaFiles.value.length === 0) {
         stopBottom.value = stopBottom.value - 50

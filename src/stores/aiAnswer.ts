@@ -41,6 +41,11 @@ export const useAiStore = defineStore("aiStore", () => {
     const changeFinish = ()=>{
         isfinish.value = !isfinish.value
     }
+    const reset = () => {
+        messages.value = [];
+        useStopComp.value = false;
+        isfinish.value = true;
+    };
     return {
         messages,
         useStopComp,
@@ -51,5 +56,6 @@ export const useAiStore = defineStore("aiStore", () => {
         addValueToAnswer,
         changeStopState,
         changeFinish,
+        reset
     }
 })

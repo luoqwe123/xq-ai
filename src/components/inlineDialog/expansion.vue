@@ -55,8 +55,9 @@ console.log(isMobile.value)
 
 
 let emit = defineEmits(['closeDialog'])
-const handleClose = () => {
+function handleClose () {
     emit("closeDialog", '')
+   
 }
 const mobileStyle = () => {
 

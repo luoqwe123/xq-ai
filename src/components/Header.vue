@@ -16,32 +16,49 @@ import Logo from "./logo.vue"
 import Contraction from "./inlineDialog/contraction.vue"
 import Expansion from "./inlineDialog/expansion.vue"
 
-import { ref } from "vue"
+import { onBeforeUnmount, onMounted, ref } from "vue"
 
 
 const expansion = ref<boolean>(false)
 
 
-const openExpansion = ()=>{
+function openExpansion (){
+    
     expansion.value = true    
+   
 }
 // 添加一个事件监听器到window对象，监听keydown事件
-window.addEventListener('keydown', function(event) {
-    // 检查是否按下了Ctrl键和W键
-   
-    
-    
-    if (event.ctrlKey && event.key === 'k' || event.ctrlKey && event.key === 'k') {
-        // 阻止默认的关闭标签页行为（在浏览器中Ctrl + W通常会关闭当前标签页）
-         event.preventDefault();
-        // 打印"你好"
-       openExpansion()
-    }
-    if(event.key === 'Escape' ){
+const handleKeydown = (event: KeyboardEvent) => {
+ 
+    if (event.ctrlKey && event.key === 'k') {
+        
         event.preventDefault();
-        closeExpansion()
+        openExpansion();
+    } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeExpansion();
     }
+};
+onMounted(() => {
+    window.addEventListener('keydown', handleKeydown);
 });
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown);
+});
+// window.addEventListener('keydown', function(event) {
+//     // 检查是否按下了Ctrl键和W键
+//     if (event.ctrlKey && event.key === 'k' || event.ctrlKey && event.key === 'k') {
+//         // 阻止默认的关闭标签页行为（在浏览器中Ctrl + W通常会关闭当前标签页）
+//          event.preventDefault();
+//         // 打印"你好"
+//        openExpansion()
+//     }
+//     if(event.key === 'Escape' ){
+//         event.preventDefault();
+//         closeExpansion()
+//     }
+// });
 const closeExpansion = ()=>{
     expansion.value = false
 }
