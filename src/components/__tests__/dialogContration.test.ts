@@ -1,6 +1,6 @@
 import { test, expect } from "vitest";
-import { mount,config } from '@vue/test-utils';
-import ContractionButton from '@/components/inlineDialog/contraction.vue'; // 根据你的项目结构调整路径
+import { mount, } from '@vue/test-utils';
+import ContractionButton from '@/components/inlineDialog/xqContraction.vue'; // 根据你的项目结构调整路径
 import { hexToRgb } from "@/utils/hexToRgb";
 import  Svg from "@/components/svgComponent.vue";
 

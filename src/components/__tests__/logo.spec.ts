@@ -1,7 +1,7 @@
 // YourComponent.spec.ts
 import { mount, shallowMount } from '@vue/test-utils';
 import { describe, it, expect } from 'vitest';
-import Logo from '@/components/logo.vue'; // Adjust the path to your component
+import Logo from '@/components/xqLogo.vue'; // Adjust the path to your component
 
 describe('YourComponent', () => {
   it('renders correctly with default values', () => {

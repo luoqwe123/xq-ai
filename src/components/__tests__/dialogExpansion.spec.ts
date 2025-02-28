@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from "vitest";
-import { shallowMount,mount } from "@vue/test-utils";
+import { shallowMount, } from "@vue/test-utils";
 
-import expansion from "@/components/inlineDialog/expansion.vue";
+import expansion from "@/components/inlineDialog/xqExpansion.vue";
 import  aiMessage from "@/components/aiTro.vue";
 import { createPinia,setActivePinia } from 'pinia';
 

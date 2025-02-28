@@ -1,19 +1,16 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import xqInput from '@/components/xqInput.vue'; // Adjust the path to your component
-import { useAiStore } from '@/stores/aiAnswer';
-import { ref } from 'vue';
-import exp from 'constants';
-import { writer } from 'repl';
+
 
 // Mock the store if needed
 const mockAddQuestion = vi.fn();
 const mockChangeStopState = vi.fn();
-interface MediaFile {
-    name: string;
-    url: string;
-    file: File;
-}
+// interface MediaFile {
+//     name: string;
+//     url: string;
+//     file: File;
+// }
 vi.mock('@/stores/aiAnswer', () => {
   return {
     useAiStore: () => ({

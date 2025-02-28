@@ -1,13 +1,12 @@
 <template>
-    <div class="app-container">
-        <Chat/>
-        
-    </div>
+  <div class="app-container">
+    <Chat/>
+  </div>
 </template>
 
 <script setup lang='ts'>
 
-import Chat from "@/components/chat.vue"
+import Chat from "@/components/xqChat.vue";
 
 
 </script>

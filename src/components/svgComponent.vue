@@ -1,12 +1,12 @@
 <template>
-    <div class="svg-container">
-        <i class="icon" >
-            <svg :style="{width,height}">
-                <use :xlink:href="prefix +'-'+ name" :fill=fill></use>
-            </svg>
-            <slot name="content"></slot>
-        </i>
-    </div>
+  <div class="svg-container">
+    <i class="icon" >
+      <svg :style="{width,height}">
+        <use :xlink:href="prefix +'-'+ name" :fill=fill></use>
+      </svg>
+      <slot name="content"></slot>
+    </i>
+  </div>
 </template>
 
 <script setup lang='ts'>
@@ -18,12 +18,12 @@ withDefaults(defineProps<{
     height?:string;
     fill?:string
 }>(),{
-    prefix:'#icon',
-    name:'milestone',
-    width:"18px",
-    height:'18px',
-    fill:"black",
-})
+  prefix:'#icon',
+  name:'milestone',
+  width:"18px",
+  height:'18px',
+  fill:"black",
+});
 
 </script>
 

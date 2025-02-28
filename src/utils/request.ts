@@ -1,11 +1,11 @@
 
 import { ref } from "vue";
 import { useAiStore } from "@/stores/aiAnswer";
-import Expansion from "@/components/inlineDialog/expansion.vue";
+
 
 
 const abortController = ref<AbortController | null>(null);
-const abortRequest = (fn: Function) => {
+const abortRequest = (fn:Function) => {
   if (abortController.value) {
     abortController.value.abort(); // 中止请求
     abortController.value = null; // 清空引用
@@ -76,11 +76,13 @@ async function askAi(question: question, expand: boolean, messages?: any) {
       // outputDiv.scrollTop = outputDiv.scrollHeight; // Scroll to bottom
     }
   } catch (error) {
-    console.error('Error:', error);
+    return error;
+    // console.error('Error:', error);
     // messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
   } finally {
     abortController.value = null;
-    !expand && dataListStore.changeFinish();
+    if(!expand) dataListStore.changeFinish();
+     
   }
 
 }

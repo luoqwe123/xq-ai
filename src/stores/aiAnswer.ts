@@ -1,6 +1,6 @@
-import { assign } from "markdown-it/lib/common/utils.mjs";
+
 import { defineStore } from "pinia";
-import { ref, toValue } from "vue";
+import { ref, } from "vue";
 interface message {
     sentBy: string,
     content: content
@@ -35,7 +35,7 @@ export const useAiStore = defineStore("aiStore", () => {
     messages.value[messages.value.length-1].content.text += value;
   };
   const changeStopState = ()=>{
-    console.log(useStopComp.value);
+    // console.log(useStopComp.value);
     useStopComp.value = !useStopComp.value;
   };
   const changeFinish = ()=>{

@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
+import { ref, onMounted, onUnmounted,  } from 'vue';
 
 export function useScreenSize() {
    

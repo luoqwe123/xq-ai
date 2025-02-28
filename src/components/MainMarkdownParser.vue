@@ -1,18 +1,18 @@
 <template>
-    <div class="aiTro-container">
-        <div class="header">
-            <img :src="Avator" alt="这是ai的头像" style="width: 36px;height: 36px;border-radius: 50%;margin-right: 0.3rem;">
-            <div class="text" style="line-height: 36px;">小秋</div>
-        </div>
-        <div v-html="htmlContent" @click="handleCopy" ></div>
+  <div class="aiTro-container">
+    <div class="header">
+      <img :src="Avator" alt="这是ai的头像" style="width: 36px;height: 36px;border-radius: 50%;margin-right: 0.3rem;">
+      <div class="text" style="line-height: 36px;">小秋</div>
     </div>
+    <div v-html="htmlContent" @click="handleCopy" ></div>
+  </div>
 </template>
 
 
 <script setup lang="ts">
 // 未实现
 // 数学及化学公式
-import Avator from "@/../public/125.jpg"
+import Avator from "@/../public/125.jpg";
 import { computed } from 'vue';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
@@ -21,14 +21,14 @@ const props = withDefaults(defineProps<{
 }>(),{});
 // 初始化 markdown-it 实例
 const md = new MarkdownIt({
-    linkify: true,    // 自动识别 URL 为链接
-    typographer: true, // 启用一些语言中立的替换和引号美化
-    breaks: true,                          
-    highlight: function (str: string, lang: string): string {
-        const trimmedStr = str.trim(); // 清除首尾空白
-        if (lang && hljs.getLanguage(lang)) {
-            try {
-                return `<div class="hljs flex justify-between  p-2 border-b-[1px] rounded-t-md text-xs">`+
+  linkify: true,    // 自动识别 URL 为链接
+  typographer: true, // 启用一些语言中立的替换和引号美化
+  breaks: true,                          
+  highlight: function (str: string, lang: string): string {
+    const trimmedStr = str.trim(); // 清除首尾空白
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<div class="hljs flex justify-between  p-2 border-b-[1px] rounded-t-md text-xs">`+
                             `${lang}`+
                             `<div class="copy-area text-xs flex items-center cursor-pointer">`+
                                 `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24">`+
@@ -43,35 +43,35 @@ const md = new MarkdownIt({
                         `<pre class="hljs rounded-b-md mb-2 p-3">`+
                             `<code>${hljs.highlight(trimmedStr , { language: lang, ignoreIllegals: true }).value}</code>`+
                         `</pre>`;
-            } catch (e) { alert("Highlight error:" + e); }
-        }
-        // 如果没有指定语言或者出错，使用普通代码块
-        return `<pre class="hljs rounded-md p-3 mb-2">`+`<code>${md.utils.escapeHtml(str)}</code>`+`</pre>`;
+      } catch (e) { alert("Highlight error:" + e); }
     }
+    // 如果没有指定语言或者出错，使用普通代码块
+    return `<pre class="hljs rounded-md p-3 mb-2">`+`<code>${md.utils.escapeHtml(str)}</code>`+`</pre>`;
+  }
 });
 md.renderer.rules.strong_open = () => {
-    return '<strong>▼//';
+  return '<strong>▼//';
 };
 const htmlContent = computed(() => md.render(props.data));
 const handleCopy = async (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.parentElement?.classList.contains('copy-area')) {
-        const codeBlock = target.parentElement.parentElement?.nextElementSibling?.querySelector('pre code') as HTMLElement | null;
-        const codeContent = codeBlock?.textContent || '';
-        try {
-            await navigator.clipboard.writeText(codeContent);
-            target.innerHTML = '复制成功';
-            target.parentElement.style.color = 'var(--succeed-color)';
-            setTimeout(() => {
-                target.innerHTML = '复制';
+  const target = e.target as HTMLElement;
+  if (target.parentElement?.classList.contains('copy-area')) {
+    const codeBlock = target.parentElement.parentElement?.nextElementSibling?.querySelector('pre code') as HTMLElement | null;
+    const codeContent = codeBlock?.textContent || '';
+    try {
+      await navigator.clipboard.writeText(codeContent);
+      target.innerHTML = '复制成功';
+      target.parentElement.style.color = 'var(--succeed-color)';
+      setTimeout(() => {
+        target.innerHTML = '复制';
                 target.parentElement!.style.color = 'var(--primary-color)';
-            }, 3000);
-        } catch (err) {
-            alert('复制失败:' + err);
-            target.innerHTML = '复制失败';
-            target.parentElement.style.color = 'var(--error-color)';
-        }
+      }, 3000);
+    } catch (err) {
+      alert('复制失败:' + err);
+      target.innerHTML = '复制失败';
+      target.parentElement.style.color = 'var(--error-color)';
     }
+  }
 };
 </script>
 

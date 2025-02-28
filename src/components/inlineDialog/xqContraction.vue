@@ -1,31 +1,31 @@
 <template>
-    <div class="contraction-container">
-        <div class="contraction" >
-            <button class="btn" :style="{ backgroundColor: backColor, color:color}">
-                <div class="left">
-                    <Svg name="search" :fill=color></Svg>
-                    <span style="line-height: 18px;font-size: 14px;margin-left: 6px;">Search...</span>
-                </div>
-                <div class="kbd">
-                    <kbd style="font-family: var(--font-sans);font-size: 12px;">
-                        <span :style="{color: color}">⌘ K</span>
-                    </kbd>
-                </div>
-            </button>
+  <div class="contraction-container">
+    <div class="contraction" >
+      <button class="btn" :style="{ backgroundColor: backColor, color:color}">
+        <div class="left">
+          <Svg name="search" :fill=color></Svg>
+          <span style="line-height: 18px;font-size: 14px;margin-left: 6px;">Search...</span>
         </div>
+        <div class="kbd">
+          <kbd style="font-family: var(--font-sans);font-size: 12px;">
+            <span :style="{color: color}">⌘ K</span>
+          </kbd>
+        </div>
+      </button>
     </div>
+  </div>
 </template>
 
 <script setup lang='ts'>
-import  Svg from "@/components/svgComponent.vue"
+import  Svg from "@/components/svgComponent.vue";
 withDefaults(defineProps<{
     backColor?: string
     color?: string
 
 }>(), {
-    backColor: 'black',
-    color:"black"
-})
+  backColor: 'black',
+  color:"black"
+});
 
 </script>
 

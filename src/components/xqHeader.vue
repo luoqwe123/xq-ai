@@ -1,50 +1,50 @@
 <template>
-    <div class="Header-container">
-        <div class="left">
-            <Logo backColor="#f7f7f7"/>
-        </div>
-        <div class="right">
-            <Contraction  backColor="white" color="#8f8f8f" @click="openExpansion"></Contraction >
-        </div>
-        <Expansion v-if="expansion" @close-dialog="closeExpansion" color="#8f8f8f" ></Expansion>
+  <div class="Header-container">
+    <div class="left">
+      <Logo backColor="#f7f7f7"/>
     </div>
+    <div class="right">
+      <Contraction  backColor="white" color="#8f8f8f" @click="openExpansion"></Contraction >
+    </div>
+    <Expansion v-if="expansion" @close-dialog="closeExpansion" color="#8f8f8f" ></Expansion>
+  </div>
 </template>
 
 <script setup lang='ts'>
 
-import Logo from "./logo.vue"
-import Contraction from "./inlineDialog/contraction.vue"
-import Expansion from "./inlineDialog/expansion.vue"
+import Logo from "./xqLogo.vue";
+import Contraction from "./inlineDialog/xqContraction.vue";
+import Expansion from "./inlineDialog/xqExpansion.vue";
 
-import { onBeforeUnmount, onMounted, ref } from "vue"
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 
-const expansion = ref<boolean>(false)
+const expansion = ref<boolean>(false);
 
 
 function openExpansion (){
     
-    expansion.value = true    
+  expansion.value = true;    
    
 }
 // 添加一个事件监听器到window对象，监听keydown事件
 const handleKeydown = (event: KeyboardEvent) => {
  
-    if (event.ctrlKey && event.key === 'k') {
+  if (event.ctrlKey && event.key === 'k') {
         
-        event.preventDefault();
-        openExpansion();
-    } else if (event.key === 'Escape') {
-        event.preventDefault();
-        closeExpansion();
-    }
+    event.preventDefault();
+    openExpansion();
+  } else if (event.key === 'Escape') {
+    event.preventDefault();
+    closeExpansion();
+  }
 };
 onMounted(() => {
-    window.addEventListener('keydown', handleKeydown);
+  window.addEventListener('keydown', handleKeydown);
 });
 
 onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener('keydown', handleKeydown);
 });
 // window.addEventListener('keydown', function(event) {
 //     // 检查是否按下了Ctrl键和W键
@@ -60,8 +60,8 @@ onBeforeUnmount(() => {
 //     }
 // });
 const closeExpansion = ()=>{
-    expansion.value = false
-}
+  expansion.value = false;
+};
 
 </script>
 

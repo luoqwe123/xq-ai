@@ -1,7 +1,7 @@
 require('dotenv').config();
 const OpenAI = require("openai");
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require('multer');
 const app = express();
@@ -23,7 +23,7 @@ const upload = multer();
 app.use(cors());
 // Endpoint to handle question from the front-end
 app.post('/ask',upload.none(), async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const userQuestion = req.body.question;
     
   if (!userQuestion) {
@@ -33,11 +33,11 @@ app.post('/ask',upload.none(), async (req, res) => {
     return res.status(400).json("暂时不支持文件😅!" );
   }
   try {
-    console.log(userQuestion);
+    // console.log(userQuestion);
     const abortController = new AbortController();
     const checkAborted = () => {
       if (req.socket.destroyed || (req.connection && req.connection.destroyed) || (req.originalReq && req.originalReq.aborted)) {
-        console.log('请求已被中止');
+        // console.log('请求已被中止');
         abortController.abort(); // 中止请求
         // res.end(); // 或者发送一个适当的响应
       }
@@ -67,9 +67,9 @@ app.post('/ask',upload.none(), async (req, res) => {
 
     for await (const chunk of response.iterator()) {
       checkAborted();
-      console.log(chunk.choices[0]);
+      // console.log(chunk.choices[0]);
       let content = chunk.choices[0].delta.content;
-      console.log(content == "");
+      // console.log(content == "");
       if (content == "") {
         content = chunk.choices[0].delta.reasoning_content;
       }
@@ -92,7 +92,7 @@ app.post('/ask',upload.none(), async (req, res) => {
 });
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  // console.log(`Server running at http://localhost:${port}`);
 });
 // 你是一位经验丰富的项目经理，对于用户每一次提出的问题，都不急于编写代码，更多是通过深思熟虑、结构化的推理以产生高质量的回答，探索更多的可能方案，并从中寻找最佳方你具备以下能力：
 //                         ## 需求澄清

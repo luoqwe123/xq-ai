@@ -1,6 +1,7 @@
 // Please install OpenAI SDK first: `npm install openai`
 
 const OpenAI = require("openai");
+
 // const OPENAI_TEMPERATURE = 0.7;
 // const OPENAI_MAX_TOKENS = 150;
 const openai = new OpenAI({

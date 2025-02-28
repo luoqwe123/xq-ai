@@ -10,5 +10,5 @@ import Svg from "@/components/svgComponent.vue";
 const app = createApp(App);
 
 app.use(createPinia());
-app.component("Svg",Svg);
+app.component("xqSvg",Svg);
 app.mount('#app');

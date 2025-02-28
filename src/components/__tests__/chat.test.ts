@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import ChatRoom from '@/components/chat.vue'; // 调整到你的组件路径
-import { useAiStore } from '@/stores/aiAnswer';
+import ChatRoom from '@/components/xqChat.vue'; // 调整到你的组件路径
+
 
 // 模拟 useAiStore
 vi.mock('@/stores/aiAnswer', () => ({
@@ -58,7 +58,7 @@ describe('ChatRoom Component', () => {
   // });
 
   it('debounces scrollToBottom correctly', async () => {
-    const scrollToBottomSpy = vi.spyOn(wrapper.vm, 'scrollToBottom');
+    // const scrollToBottomSpy = vi.spyOn(wrapper.vm, 'scrollToBottom');
     wrapper.vm.scrollToBottom();
     expect(wrapper.vm.chat).toBeTruthy();
     // 断言 scrollTop 被设置为 scrollHeight
