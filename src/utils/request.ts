@@ -42,7 +42,7 @@ async function askAi(question: question, expand: boolean, messages?: any) {
 
     const length = messages?.value.length
     try {
-        const response = await fetch('http://localhost:3000/ask', {
+        const response = await fetch('http://1.92.82.236:3001/ask', {
             method: 'POST',
             // headers: {
             //     'Content-Type': 'application/json',
