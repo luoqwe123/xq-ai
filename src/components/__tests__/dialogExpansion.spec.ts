@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from "vite
 import { shallowMount,mount } from "@vue/test-utils";
 
 import expansion from "@/components/inlineDialog/expansion.vue";
-import  aiMessage from "@/components/aiTro.vue"
+import  aiMessage from "@/components/aiTro.vue";
 import { createPinia,setActivePinia } from 'pinia';
 
 
 describe('ExpansionComponent', () => {
   let wrapper:any;
-  let pinia:any
+  let pinia:any;
   beforeAll(() => {
     // 只创建一次 Pinia 实例
     pinia = createPinia();

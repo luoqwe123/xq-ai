@@ -1,14 +1,14 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import 'virtual:svg-icons-register'
-import App from './App.vue'
-import Svg from "@/components/svgComponent.vue"
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import 'virtual:svg-icons-register';
+import App from './App.vue';
+import Svg from "@/components/svgComponent.vue";
 
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.component("Svg",Svg)
-app.mount('#app')
+app.use(createPinia());
+app.component("Svg",Svg);
+app.mount('#app');

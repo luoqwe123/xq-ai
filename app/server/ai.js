@@ -9,7 +9,7 @@ const openai = new OpenAI({
 });
 
 async function main() {
-  console.log(111)
+  console.log(111);
   const completion = await openai.chat.completions.create({
     messages: [
       { role: "system", content: "You are a helpful assistant." },
@@ -20,9 +20,9 @@ async function main() {
     model: "deepseek-reasoner",
     stream: true
   });
-  console.log(completion.iterator())
+  console.log(completion.iterator());
   for await (const chunk of completion.iterator()) {
-    console.log(chunk)
+    console.log(chunk);
   }
   
 }

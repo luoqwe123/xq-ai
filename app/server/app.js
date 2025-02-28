@@ -8,8 +8,8 @@ const app = express();
 
 const port = 3000;
 const openai = new OpenAI({
-    baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
-    apiKey: process.env.OPENAI_API_KEY
+  baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
+  apiKey: process.env.OPENAI_API_KEY
 });
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
@@ -23,76 +23,76 @@ const upload = multer();
 app.use(cors());
 // Endpoint to handle question from the front-end
 app.post('/ask',upload.none(), async (req, res) => {
-    console.log(req.body)
-    const userQuestion = req.body.question;
+  console.log(req.body);
+  const userQuestion = req.body.question;
     
-    if (!userQuestion) {
-        return res.status(400).json( "Question is required!" );
-    }
-    if(req.body.files){
-        return res.status(400).json("暂时不支持文件😅!" );
-    }
-    try {
-        console.log(userQuestion)
-        const abortController = new AbortController();
-        const checkAborted = () => {
-            if (req.socket.destroyed || (req.connection && req.connection.destroyed) || (req.originalReq && req.originalReq.aborted)) {
-                console.log('请求已被中止');
-                abortController.abort(); // 中止请求
-                // res.end(); // 或者发送一个适当的响应
-            }
-        };
-        const response = await openai.chat.completions.create(
-            {
-                messages: [
-                    {
-                        role: "system",
-                        content: `You are a useful assistant `
-                    },
-                    { role: "user", content: userQuestion }],
-                model: "ep-20250211161731-n8lcb",
-                stream: true, // Enable streaming
-                max_tokens: 2048,
-            },
-            {
-                signal: abortController.signal, // 将信号绑定到请求
-            }
-        );
+  if (!userQuestion) {
+    return res.status(400).json( "Question is required!" );
+  }
+  if(req.body.files){
+    return res.status(400).json("暂时不支持文件😅!" );
+  }
+  try {
+    console.log(userQuestion);
+    const abortController = new AbortController();
+    const checkAborted = () => {
+      if (req.socket.destroyed || (req.connection && req.connection.destroyed) || (req.originalReq && req.originalReq.aborted)) {
+        console.log('请求已被中止');
+        abortController.abort(); // 中止请求
+        // res.end(); // 或者发送一个适当的响应
+      }
+    };
+    const response = await openai.chat.completions.create(
+      {
+        messages: [
+          {
+            role: "system",
+            content: `You are a useful assistant `
+          },
+          { role: "user", content: userQuestion }],
+        model: "ep-20250211161731-n8lcb",
+        stream: true, // Enable streaming
+        max_tokens: 2048,
+      },
+      {
+        signal: abortController.signal, // 将信号绑定到请求
+      }
+    );
 
-        // Set headers for streaming response
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
+    // Set headers for streaming response
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
         
 
-        for await (const chunk of response.iterator()) {
-            checkAborted()
-            console.log(chunk.choices[0])
-            let content = chunk.choices[0].delta.content;
-            console.log(content == "")
-            if (content == "") {
-                content = chunk.choices[0].delta.reasoning_content;
-            }
-            // Stream content to the client
-            if (content) {
-                res.write(`${content}`);
-            }
-            if(chunk.choices[0]['finish_reason'] == "top"){
-                res.end();
-            }
-        }
-        // Indicate the stream is done
-        // res.write(`data: [DONE]\n\n`);
-       
+    for await (const chunk of response.iterator()) {
+      checkAborted();
+      console.log(chunk.choices[0]);
+      let content = chunk.choices[0].delta.content;
+      console.log(content == "");
+      if (content == "") {
+        content = chunk.choices[0].delta.reasoning_content;
+      }
+      // Stream content to the client
+      if (content) {
+        res.write(`${content}`);
+      }
+      if(chunk.choices[0]['finish_reason'] == "top"){
         res.end();
-    } catch (error) {
-        console.error("Error occurred:", error);
-        res.status(500).json({ error: "Failed to process the request." });
+      }
     }
+    // Indicate the stream is done
+    // res.write(`data: [DONE]\n\n`);
+       
+    res.end();
+  } catch (error) {
+    console.error("Error occurred:", error);
+    res.status(500).json({ error: "Failed to process the request." });
+  }
 });
 // Start the server
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
 // 你是一位经验丰富的项目经理，对于用户每一次提出的问题，都不急于编写代码，更多是通过深思熟虑、结构化的推理以产生高质量的回答，探索更多的可能方案，并从中寻找最佳方你具备以下能力：
 //                         ## 需求澄清

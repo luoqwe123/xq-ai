@@ -61,7 +61,7 @@ jobs:
                 username: ${{ secrets.USER_NAME }}
                 password: ${{ secrets.PASSWORD }}
                 port: 22
-                target: "/www/wwwroot/wq-ai/web/"
+                target: "/www/wwwroot/xq-ai/web/"
 
 
           
