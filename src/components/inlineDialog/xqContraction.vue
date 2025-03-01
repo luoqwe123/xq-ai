@@ -23,8 +23,8 @@ withDefaults(defineProps<{
     color?: string
 
 }>(), {
-  backColor: 'black',
-  color:"black"
+  backColor: 'white',
+  color:"#8f8f8f"
 });
 
 </script>

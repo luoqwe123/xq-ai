@@ -43,7 +43,7 @@ import { useScreenSize } from "@/hooks/useScreenSize";
 withDefaults(defineProps<{
     color?: string
 }>(), {
-  color: "black"
+  color: "#8f8f8f"
 });
 interface messagesType{
   sentBy:string,

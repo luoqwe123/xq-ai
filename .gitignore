@@ -14,14 +14,12 @@ dist-ssr
 coverage
 *.local
 app/server/node_modules
-
-app/server/node_modules
-app/server/ai.js
+.env
+app/server/ignoire
+app/server/.env*
 
 coverage
 src/components/onlyTestCom
-
-
 
 /cypress/videos/
 /cypress/screenshots/
