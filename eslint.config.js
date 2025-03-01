@@ -9,7 +9,12 @@ export default [
 
   // 忽略 abc 文件夹中的所有文件
   {
-    ignores: ["src/components/onlyTestCom/**"], // 忽略 abc 文件夹及其子目录下的所有文件
+    ignores: [
+      "src/components/onlyTestCom/**",
+      "src/components/__tests__/**"
+    ], // 忽略 abc 文件夹及其子目录下的所有文件
+
+    
   },
 
   // 针对 .ts 和 .vue 文件的配置
@@ -79,10 +84,10 @@ export default [
       },
     },
     rules: {
-      "@typescript-eslint/no-explicit-any": "off", // 允许使用 any 类型
+      // "@typescript-eslint/no-explicit-any": "off", // 允许使用 any 类型
       "@typescript-eslint/no-require-imports": "off", // 允许使用 require 引入模块
       "@typescript-eslint/no-var-requires": "off", // 允许使用 var require
-      "@typescript-eslint/no-unsafe-function-type":"off", //允许使用 Function 类型
+      // "@typescript-eslint/no-unsafe-function-type":"off", //允许使用 Function 类型
     },
   },
   // 针对 Vue 文件的特定配置
@@ -101,11 +106,11 @@ export default [
       "vue/html-indent": ["error", 2], // <template> 缩进 2 个空格
       indent: ["error", 2], // <script> 和 <style> 缩进 2 个空格
       semi: ["error", "always"], // 强制分号
-      "@typescript-eslint/no-explicit-any": "off", // 允许使用 any 类型
+      // "@typescript-eslint/no-explicit-any": "off", // 允许使用 any 类型
       "@typescript-eslint/no-require-imports": "off", // 允许使用 require
       "@typescript-eslint/no-var-requires": "off", // 允许使用 var require
-      "@typescript-eslint/no-unsafe-function-type":"off", //允许使用 Function 类型
-      "@typescript-eslint/no-this-alias":'off'
+      // "@typescript-eslint/no-unsafe-function-type":"off", //允许使用 Function 类型
+      // "@typescript-eslint/no-this-alias":'off'
     },
   },
 ];

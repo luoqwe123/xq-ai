@@ -1,11 +1,11 @@
 
 import { ref } from "vue";
 import { useAiStore } from "@/stores/aiAnswer";
-
+import type { MediaFile } from "@/components/xqInput.vue";
 
 
 const abortController = ref<AbortController | null>(null);
-const abortRequest = (fn:Function) => {
+const abortRequest = (fn:()=> void) => {
   if (abortController.value) {
     abortController.value.abort(); // 中止请求
     abortController.value = null; // 清空引用
@@ -15,9 +15,16 @@ const abortRequest = (fn:Function) => {
 };
 interface question {
     text: string,
-    files?: any
+    files?: MediaFile[]
 }
-async function askAi(question: question, expand: boolean, messages?: any) {
+interface messagesType{
+  value:{
+    sentBy:string,
+    content:string
+  }[]
+ 
+}
+async function askAi(question: question, expand: boolean, messages?:messagesType) {
   const dataListStore = useAiStore();
   if (!expand) {
     dataListStore.addAnswer();
@@ -27,7 +34,7 @@ async function askAi(question: question, expand: boolean, messages?: any) {
   formData.append("question", question.text);
   if (Array.isArray(question.files) && question.files.length) {
     question.files.forEach((el, index) => {
-      formData.append(`files[${index}]`, el);
+      formData.append(`files[${index}]`, el.file,el.name);
     });
   }
     
@@ -67,7 +74,7 @@ async function askAi(question: question, expand: boolean, messages?: any) {
         alert(decoder.decode(value, { stream: true }));
         return;
       }
-      if (expand) {
+      if (expand && messages?.value.length && length) {
         messages.value[length - 1].content += decoder.decode(value, { stream: true });
       } else {
         dataListStore.addValueToAnswer(decoder.decode(value, { stream: true }));

@@ -31,8 +31,7 @@
       <div class="div">
         <button @click="triggerFileInput"
                 style="width: 20px;height: 20px;font-size: 20px;line-height: 20px;cursor: pointer;">+</button>
-        <input type="file" id="fileInput" ref="fileInputRef" style="display: none;"
-               @change="handleFileUpload" />
+        <input type="file" id="fileInput" ref="fileInputRef" style="display: none;" @change="handleFileUpload" />
       </div>
 
     </div>
@@ -41,7 +40,7 @@
 
 <script setup lang='ts'>
 //bug  输入框删除了文本，输入框高度的回去
-import {  ref, defineEmits, } from 'vue';
+import { ref, defineEmits, } from 'vue';
 import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
 const dataListStore = useAiStore();
@@ -51,22 +50,22 @@ const dataListStore = useAiStore();
 
 // });
 // 定义媒体文件类型
-interface MediaFile {
-    name: string;
-    url: string;
-    file: File;
+export interface MediaFile {
+  name: string;
+  url: string;
+  file: File;
 }
 
 
 const mediaFiles = ref<MediaFile[]>([]);
 const fileInputRef = ref<HTMLInputElement | null>(null);
-const inputArea = ref<any>(null);
+const inputArea = ref<HTMLInputElement | null>(null);
 const newMessage = ref('');
 const stopBottom = ref(80);
 const Oldscroll = ref(34);
 
 const emit = defineEmits(['update:modelValue', 'enter', 'update:stopBottom']);
-const send = async (event: any) => {
+const send = async (event: KeyboardEvent):Promise<void> => {
   if (event.code == 'Enter') {
     event.preventDefault();
   }
@@ -75,6 +74,7 @@ const send = async (event: any) => {
     text: newMessage.value,
     files: mediaFiles.value.map((el) => el)
   };
+  // console.log("files",formdata.files)
   newMessage.value = '';
   mediaFiles.value = [];
   // mediaFiles.value.forEach((el, index) => {
@@ -90,18 +90,15 @@ const send = async (event: any) => {
   }
   emit("update:stopBottom", stopBottom.value);
 };
-const handleInput = (e: any) => {
-  const el = e.target;
+const handleInput = (e: Event):void => {
+  const el = e.target as HTMLTextAreaElement;
   el.style.overflowY = 'hidden'; // 隐藏垂直滚动条
   el.style.resize = 'none'; // 禁止用户手动调整大小
   el.style.height = 'auto'; // 根据内容自动调整高度
   const scrollHeight = el.scrollHeight;
   el.style.height = `${scrollHeight}px`;
-
   stopBottom.value = scrollHeight + stopBottom.value - Oldscroll.value;
-  inputArea.value.style.height = stopBottom.value + 'px';
-
-
+  if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
   Oldscroll.value = scrollHeight;
 };
 
@@ -145,7 +142,7 @@ const handleFileUpload = (event: Event) => {
   // console.log("test", mediaFiles.value.length);
   if (mediaFiles.value.length === 1) {
     stopBottom.value = stopBottom.value + 50;
-    inputArea.value.style.height = stopBottom.value + 'px';
+    if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
   }
 
   // 重置文件输入（可选，但通常是个好习惯）
@@ -156,13 +153,13 @@ const handleFileUpload = (event: Event) => {
 const triggerFileInput = () => {
   fileInputRef.value?.click();
 };
-const removeFile = (el: any, index: number) => {
+const removeFile = (el: MediaFile, index: number) => {
   URL.revokeObjectURL(el.url);
 
   mediaFiles.value.splice(index, 1);
   if (mediaFiles.value.length === 0) {
     stopBottom.value = stopBottom.value - 50;
-    inputArea.value.style.height = stopBottom.value + 'px';
+    if(inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
   }
 };
 
@@ -178,23 +175,23 @@ const removeFile = (el: any, index: number) => {
 
 <style scoped>
 .text {
-    outline-style: none;
-    width: 98%;
-    line-height: 2;
-    resize: none;
-    overflow-y: hidden;
-    min-height: 34px;
+  outline-style: none;
+  width: 98%;
+  line-height: 2;
+  resize: none;
+  overflow-y: hidden;
+  min-height: 34px;
 }
 
 .inputBox {
-    width: 100%;
-    height: 100%;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    padding: 0px 10px;
-    background-color: #f7f7f7;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 10px;
+  background-color: #f7f7f7;
 
 }
 </style>

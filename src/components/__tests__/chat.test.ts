@@ -1,8 +1,15 @@
-import { mount } from '@vue/test-utils';
+import { mount,VueWrapper } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ChatRoom from '@/components/xqChat.vue'; // 调整到你的组件路径
 
-
+// 定义 ChatRoom 的实例类型
+type ChatRoomInstance = {
+  chat: { scrollHeight: number; scrollTop: number };
+  sendMessage(): Promise<void>;
+  scrollToBottom(): void;
+  createDebounce(): Function;
+  $refs: { chat: HTMLElement };
+};
 // 模拟 useAiStore
 vi.mock('@/stores/aiAnswer', () => ({
   useAiStore: () => ({
@@ -14,14 +21,14 @@ vi.mock('@/stores/aiAnswer', () => ({
 }));
 
 describe('ChatRoom Component', () => {
-  let wrapper: any;
+  let wrapper: VueWrapper<ChatRoomInstance>;
   const mockChatElement = {
     scrollHeight: 200,
     scrollTop: 0,
   };
 
   beforeEach(() => {
-    wrapper = mount(ChatRoom);
+    wrapper = mount(ChatRoom) as VueWrapper<ChatRoomInstance>;
     wrapper.vm.chat = mockChatElement;
   });
 

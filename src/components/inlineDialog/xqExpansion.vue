@@ -45,9 +45,12 @@ withDefaults(defineProps<{
 }>(), {
   color: "black"
 });
-
+interface messagesType{
+  sentBy:string,
+  content:string
+}
 const iptValue = ref('');
-const messages = ref<any[]>([]);
+const messages = ref<messagesType []|never>([]);
 const suggest = ref<string>("Suggestions");
 
 let { isMobile } = useScreenSize();
@@ -78,7 +81,8 @@ const computerStyle = () => {
     'height': "460px"
   };
 };
-const suggestionsArr = ref<any[]>([
+
+const suggestionsArr = ref([
   {
     icon: 'hi',
     content: "你好"

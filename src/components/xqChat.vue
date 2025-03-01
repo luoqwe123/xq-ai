@@ -59,7 +59,11 @@ const dataListStore = useAiStore();
 //     sentBy: string,
 //     content: string
 // }
-let createDebounce: any = "";
+interface DebounceResult {
+  doFn: (...args: unknown[]) => void; // 参数类型根据 fn 调整
+  stop: () => void;
+}
+let createDebounce: DebounceResult | null = null;
 const stopBottom = ref(80);
 // const messages = ref<any>([
 //   // { sentBy: 'ai', content: '我是一个综合型助手小秋，不会的问题都可以来问我呦 ٩(๑❛ᴗ❛๑)۶' },
@@ -96,23 +100,26 @@ const sendMessage = async () => {
 watchEffect(() => {
   if (dataListStore.isfinish && createDebounce) {
     setTimeout(() => {
-      createDebounce.stop();
-      createDebounce = '';
+      if(createDebounce) createDebounce.stop();
+      createDebounce = null;
     }, 1500);
   }
 });
-const chat = ref<any>(null);
-function debounce(fn: Function, delay: number) {
-  let timer: any;
+const chat = ref<HTMLDivElement|null>(null);
+function debounce(fn: (...args: unknown[]) => void, delay: number) {
+  let timer: ReturnType<typeof setTimeout> | null = null;
    
-  function doFn(this: any, ...args: any[]) {
-    let content: any = this;
+  function doFn(this: unknown, ...args: unknown[]) {
+   
     timer = setInterval(() => {
-      fn.apply(content, args);
+      fn.apply(this, args);
     }, delay);
   }
   function stop() {
-    clearInterval(timer);
+    if (timer !== null) {
+      clearTimeout(timer); // 使用 clearTimeout
+      timer = null;
+    }
   }
   return { doFn, stop };
 }
@@ -131,14 +138,13 @@ const scrollToBottom = () => {
 
 //     scrollToBottom();
 // });
-function stopScroll(event: any) {
+function stopScroll(event: WheelEvent) {
   if (event.deltaY < 0 && createDebounce) {
-        
     createDebounce.stop();
-        
-
   }
 }
+
+
 </script>
 
 <style scoped>

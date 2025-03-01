@@ -31,7 +31,7 @@ export const useAiStore = defineStore("aiStore", () => {
       }
     });
   };
-  const addValueToAnswer = (value:any)=>{
+  const addValueToAnswer = (value:string)=>{
     messages.value[messages.value.length-1].content.text += value;
   };
   const changeStopState = ()=>{
