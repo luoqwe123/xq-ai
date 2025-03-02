@@ -5,11 +5,11 @@ import type { MediaFile } from "@/components/xqInput.vue";
 
 
 const abortController = ref<AbortController | null>(null);
-const abortRequest = (fn:()=> void) => {
+const abortRequest = (fn?:()=> void) => {
   if (abortController.value) {
     abortController.value.abort(); // 中止请求
     abortController.value = null; // 清空引用
-    fn();
+    fn?.();
 
   }
 };
@@ -26,9 +26,10 @@ interface messagesType{
 }
 async function askAi(question: question, expand: boolean, messages?:messagesType) {
   const dataListStore = useAiStore();
+  dataListStore.changeFinish();
   if (!expand) {
     dataListStore.addAnswer();
-    dataListStore.changeFinish();
+    
   }
   const formData = new FormData();
   formData.append("question", question.text);
@@ -89,7 +90,7 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
     // messages.value[length - 1].content = 'An error occurred while fetching the AI response.'
   } finally {
     abortController.value = null;
-    if(!expand) dataListStore.changeFinish();
+    dataListStore.changeFinish();
      
   }
 

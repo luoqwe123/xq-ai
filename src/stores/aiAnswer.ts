@@ -1,6 +1,6 @@
 
 import { defineStore } from "pinia";
-import { ref, } from "vue";
+import { ref, watchEffect, } from "vue";
 interface message {
     sentBy: string,
     content: content
@@ -17,6 +17,7 @@ export const useAiStore = defineStore("aiStore", () => {
   const messages = ref<message[]>([]);
   const useStopComp = ref<boolean>(false);
   const isfinish = ref<boolean>(true);
+  
   const addQuestion = (question:content)=>{
     messages.value.push({
       sentBy: 'user',
