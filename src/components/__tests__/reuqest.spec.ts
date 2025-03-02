@@ -55,7 +55,7 @@ describe('askAi function', () => {
     // 验证 fetch 被调用了一次
     expect(global.fetch).toHaveBeenCalledTimes(1);
     // 验证 fetch 的参数
-    expect(global.fetch).toHaveBeenCalledWith(import.meta.env.VITE_GLOB_API_URL, {
+    expect(global.fetch).toHaveBeenCalledWith('http://1.92.82.236:3001/ask', {
       method: 'POST',
       body: expect.any(FormData),
       signal: expect.any(AbortSignal),
