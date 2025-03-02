@@ -2,7 +2,7 @@
   <div class="file-input-container" ref="inputArea">
     <div class="inputBox">
       <textarea @input="handleInput" placeholder="Type a message..." row="1" class="text" v-model="newMessage"
-        @keydown.enter.prevent="send" :style="{ lineHeight: props.textareaH+'px',height: props.textareaH+'px'}"></textarea>
+                @keydown.enter.prevent="send" :style="{ lineHeight: props.textareaH+'px',height: props.textareaH+'px'}"></textarea>
       <ul v-if="mediaFiles.length" style="display: flex;flex-wrap: wrap;">
         <li v-for="(media, index) in mediaFiles" :key="index" style="margin-right: 16px;">
           <!-- <a :href="media.url" target="_blank" rel="noopener noreferrer">
@@ -28,9 +28,9 @@
       </ul>
       <div class="div" style="display: flex;justify-content: space-between;">
         <button @click="triggerFileInput"
-          style="width: 20px;height: 20px;font-size: 24px;line-height: 20px;cursor: pointer;">+</button>
+                style="width: 20px;height: 20px;font-size: 24px;line-height: 20px;cursor: pointer;">+</button>
         <input type="file" id="fileInput" ref="fileInputRef" style="display: none;" @change="handleFileUpload" />
-        <button :style="{ backgroundColor:sendBtnBack,width: '24px' ,height: '24px' ,borderRadius: '50%' ,display:' flex',justifyContent: 'center'}" >
+        <button @click="send()" :style="{ backgroundColor:sendBtnBack,width: '24px' ,height: '24px' ,borderRadius: '50%' ,display:' flex',justifyContent: 'center'}" >
           <xqSvg name="right" width="20px" height="20px" :fill='sendBtnFill' ></xqSvg>
         </button>
       </div>
@@ -66,23 +66,23 @@ const inputArea = ref<HTMLInputElement | null>(null);
 const newMessage = ref('');
 const stopBottom = ref(93);
 const textareaHeight = ref(props.textareaH);
-const sendBtnFill = ref("#b2b8b8")
-const sendBtnBack = ref("")
+const sendBtnFill = ref("#b2b8b8");
+const sendBtnBack = ref("");
 
 const emit = defineEmits(['update:modelValue', 'enter', 'update:stopBottom']);
 watchEffect(() => {
   if (newMessage.value) {
-    sendBtnFill.value = "white"
-    sendBtnBack.value = "#5d5cde"
-    console.log(sendBtnFill.value)
+    sendBtnFill.value = "white";
+    sendBtnBack.value = "#5d5cde";
+    // console.log(sendBtnFill.value);
   } else {
-    sendBtnFill.value = "black"
-    sendBtnBack.value = ""
+    sendBtnFill.value = "#afb5b5";
+    sendBtnBack.value = "";
     
   }
-})
-const send = async (event: KeyboardEvent): Promise<void> => {
-  if (event.code == 'Enter') {
+});
+const send = async (event?: KeyboardEvent): Promise<void> => {
+  if (event && event.code == 'Enter') {
     event.preventDefault();
   }
   // console.log(mediaFiles.value);
@@ -121,10 +121,10 @@ const handleInput = (e: Event): void => {
   el.style.height = 'auto'; // 根据内容自动调整高度
 
   const scrollHeight = el.scrollHeight;
-  console.log(scrollHeight)
+  // console.log(scrollHeight);
   el.style.height = `${scrollHeight}px`;
   stopBottom.value = scrollHeight + stopBottom.value - textareaHeight.value;
-  console.log("stop",scrollHeight,textareaHeight.value)
+  // console.log("stop",scrollHeight,textareaHeight.value);
   
   if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
   
