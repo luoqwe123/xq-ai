@@ -1,8 +1,8 @@
 <template>
   <div class="svg-container">
     <i class="icon" >
-      <svg :style="{width,height}">
-        <use :xlink:href="prefix +'-'+ name" :fill=fill></use>
+      <svg :style="{width,height,fill:fill}">
+        <use :xlink:href="prefix +'-'+ name" fill='white'></use>
       </svg>
       <slot name="content"></slot>
     </i>

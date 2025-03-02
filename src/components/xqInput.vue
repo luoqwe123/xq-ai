@@ -2,7 +2,7 @@
   <div class="file-input-container" ref="inputArea">
     <div class="inputBox">
       <textarea @input="handleInput" placeholder="Type a message..." row="1" class="text" v-model="newMessage"
-                @keydown.enter.prevent="send"></textarea>
+        @keydown.enter.prevent="send" :style="{ lineHeight: props.textareaH+'px',height: props.textareaH+'px'}"></textarea>
       <ul v-if="mediaFiles.length" style="display: flex;flex-wrap: wrap;">
         <li v-for="(media, index) in mediaFiles" :key="index" style="margin-right: 16px;">
           <!-- <a :href="media.url" target="_blank" rel="noopener noreferrer">
@@ -11,10 +11,8 @@
           <!-- 如果需要预览图片，可以添加一个条件渲染的 <img> 标签 -->
           <div class="showFile" style="position: relative;">
 
-            <img v-if="isImage(media.file)" :src="media.url" alt="" style="max-width: 50px;height: 50px;object-fit: cover
-                        ;aspect-ratio: 1;border-radius: 10px;position: relative;" />
-            <div class="elseFile" v-else style="display: flex;height: 50px;border-radius: 10px;border: 1px solid #ddd;padding: 0px 6px;
-                            ">
+            <img v-if="isImage(media.file)" :src="media.url" alt="" :style="imgStyle"/>
+            <div class="elseFile" v-else  :style="{height:props.inputImage+'px',display: 'flex',borderRadius: '10px',border: '1px solid #ddd',padding: '0px 6px'}">
               <Svg name="file"></Svg>
               <div class="props" style="display: flex;align-items: center;margin-left: 3px;">
                 {{ media.name }}
@@ -28,10 +26,13 @@
           </div>
         </li>
       </ul>
-      <div class="div">
+      <div class="div" style="display: flex;justify-content: space-between;">
         <button @click="triggerFileInput"
-                style="width: 20px;height: 20px;font-size: 20px;line-height: 20px;cursor: pointer;">+</button>
+          style="width: 20px;height: 20px;font-size: 24px;line-height: 20px;cursor: pointer;">+</button>
         <input type="file" id="fileInput" ref="fileInputRef" style="display: none;" @change="handleFileUpload" />
+        <button :style="{ backgroundColor:sendBtnBack,width: '24px' ,height: '24px' ,borderRadius: '50%' ,display:' flex',justifyContent: 'center'}" >
+          <xqSvg name="right" width="20px" height="20px" :fill='sendBtnFill' ></xqSvg>
+        </button>
       </div>
 
     </div>
@@ -40,15 +41,17 @@
 
 <script setup lang='ts'>
 //bug  输入框删除了文本，输入框高度的回去
-import { ref, defineEmits, } from 'vue';
+import { ref, defineEmits, watchEffect,computed, type CSSProperties } from 'vue';
 import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
 const dataListStore = useAiStore();
-// const props = withDefaults(defineProps<{
-
-// }>(), {
-
-// });
+const props = withDefaults(defineProps<{
+  inputImage?:number
+  textareaH?:number
+}>(), {
+  textareaH:36,
+  inputImage:50
+});
 // 定义媒体文件类型
 export interface MediaFile {
   name: string;
@@ -61,11 +64,24 @@ const mediaFiles = ref<MediaFile[]>([]);
 const fileInputRef = ref<HTMLInputElement | null>(null);
 const inputArea = ref<HTMLInputElement | null>(null);
 const newMessage = ref('');
-const stopBottom = ref(80);
-const Oldscroll = ref(34);
+const stopBottom = ref(93);
+const textareaHeight = ref(props.textareaH);
+const sendBtnFill = ref("#b2b8b8")
+const sendBtnBack = ref("")
 
 const emit = defineEmits(['update:modelValue', 'enter', 'update:stopBottom']);
-const send = async (event: KeyboardEvent):Promise<void> => {
+watchEffect(() => {
+  if (newMessage.value) {
+    sendBtnFill.value = "white"
+    sendBtnBack.value = "#5d5cde"
+    console.log(sendBtnFill.value)
+  } else {
+    sendBtnFill.value = "black"
+    sendBtnBack.value = ""
+    
+  }
+})
+const send = async (event: KeyboardEvent): Promise<void> => {
   if (event.code == 'Enter') {
     event.preventDefault();
   }
@@ -90,16 +106,30 @@ const send = async (event: KeyboardEvent):Promise<void> => {
   }
   emit("update:stopBottom", stopBottom.value);
 };
-const handleInput = (e: Event):void => {
+const imgStyle = computed((): CSSProperties => ({
+  maxWidth: props.inputImage + 'px',   // 动态宽度
+  height: props.inputImage + 'px',     // 动态高度
+  objectFit: 'cover',           // 移除多余空格
+  aspectRatio: '1',             // 字符串形式，CSS 支持
+  borderRadius: '10px',         // 圆角
+  position: 'relative',         // 相对定位
+}));
+const handleInput = (e: Event): void => {
   const el = e.target as HTMLTextAreaElement;
   el.style.overflowY = 'hidden'; // 隐藏垂直滚动条
   el.style.resize = 'none'; // 禁止用户手动调整大小
   el.style.height = 'auto'; // 根据内容自动调整高度
+
   const scrollHeight = el.scrollHeight;
+  console.log(scrollHeight)
   el.style.height = `${scrollHeight}px`;
-  stopBottom.value = scrollHeight + stopBottom.value - Oldscroll.value;
+  stopBottom.value = scrollHeight + stopBottom.value - textareaHeight.value;
+  console.log("stop",scrollHeight,textareaHeight.value)
+  
   if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
-  Oldscroll.value = scrollHeight;
+  
+  textareaHeight.value = scrollHeight;
+ 
 };
 
 // 判断文件是否为图片
@@ -141,7 +171,7 @@ const handleFileUpload = (event: Event) => {
   }
   // console.log("test", mediaFiles.value.length);
   if (mediaFiles.value.length === 1) {
-    stopBottom.value = stopBottom.value + 50;
+    stopBottom.value = stopBottom.value + props.inputImage;
     if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
   }
 
@@ -158,8 +188,8 @@ const removeFile = (el: MediaFile, index: number) => {
 
   mediaFiles.value.splice(index, 1);
   if (mediaFiles.value.length === 0) {
-    stopBottom.value = stopBottom.value - 50;
-    if(inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
+    stopBottom.value = stopBottom.value - props.inputImage;
+    if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
   }
 };
 
@@ -177,10 +207,9 @@ const removeFile = (el: MediaFile, index: number) => {
 .text {
   outline-style: none;
   width: 98%;
-  line-height: 2;
   resize: none;
   overflow-y: hidden;
-  min-height: 34px;
+ 
 }
 
 .inputBox {
@@ -190,7 +219,7 @@ const removeFile = (el: MediaFile, index: number) => {
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  padding: 0px 10px;
+  padding: 5px 10px;
   background-color: #f7f7f7;
 
 }

@@ -225,7 +225,7 @@ function stopScroll(event: WheelEvent) {
     width: 96%;
     position: fixed;
     bottom: 0px;
-    height: 80px;
+    height: 93px;
     z-index: 2;
 
 }
