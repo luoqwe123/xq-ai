@@ -32,7 +32,7 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   }
   const formData = new FormData();
  
-   if (!question.text.length) {
+  if (!question.text.length) {
     
     alert('Please enter a question!');
     return;
@@ -53,7 +53,7 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   const length = messages?.value.length;
  
   try {
-    const response = await fetch('http://1.92.82.236:3001/ask', {
+    const response = await fetch('http://localhost:3001/ask', {
       method: 'POST',
       // headers: {
       //     'Content-Type': 'application/json',

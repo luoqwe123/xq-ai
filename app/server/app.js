@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const app = express();
-
+console.log( process.env.OPENAI_API_KEY)
 const port = 3001;
 const openai = new OpenAI({
   baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
@@ -92,7 +92,7 @@ app.post('/ask',upload.none(), async (req, res) => {
 });
 // Start the server
 app.listen(port, () => {
-  // console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
 // 你是一位经验丰富的项目经理，对于用户每一次提出的问题，都不急于编写代码，更多是通过深思熟虑、结构化的推理以产生高质量的回答，探索更多的可能方案，并从中寻找最佳方你具备以下能力：
 //                         ## 需求澄清
