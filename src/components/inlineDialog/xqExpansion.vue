@@ -2,10 +2,10 @@
   <div class="expansion-container">
     <div class="dialog-overlay" @click="handleClose"></div>
     <div class="dialog-box" :style="isMobile ? mobileStyle() : computerStyle()"
-      :class="isMobile ? 'slide-up' : 'fade-in '">
+         :class="isMobile ? 'slide-up' : 'fade-in '">
       <div class="dislog-header">
         <input type="text" @keyup.enter="chat()" style="width: 80%;border: none;padding-left: 10px;height: 28px;"
-          placeholder="请输入您想询问的问题..." v-model="iptValue">
+               placeholder="请输入您想询问的问题..." v-model="iptValue">
         <button style="border: 1px solid #ebebeb;background-color: white;border-radius: 5px;" v-if="!iptValue&&aiStore.isfinish">
           <kbd
             style="font-family: var(--font-sans);font-size: 12px;display: flex;justify-content: center;align-items: center;">
@@ -20,7 +20,7 @@
       </div>
       <div class="dialog-main">
         <div class="suggestions" style="width: 100%;height: 32px;font-size: 12px;line-height: 32px;"
-          :style="{ color: color }">
+             :style="{ color: color }">
           {{ suggest }}
         </div>
         <template v-if="!messages.length">
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang='ts'>
-import { computed, defineEmits, ref, watchEffect, } from 'vue';
+import { computed, defineEmits, ref, } from 'vue';
 import Svg from '../svgComponent.vue';
 import aiMessage from '../aiTro.vue';
 import { askAi,abortRequest } from '@/utils/request';
@@ -65,7 +65,7 @@ const suggest = ref<string>("Suggestions");
 
 let { isMobile } = useScreenSize();
 // console.log(isMobile.value);
-const aiStore = useAiStore()
+const aiStore = useAiStore();
 
 let emit = defineEmits(['closeDialog']);
 function handleClose() {
@@ -73,8 +73,8 @@ function handleClose() {
 
 }
 const selectSvg = computed(()=>{
-  return aiStore.isfinish ? 'right': 'stop'
-})
+  return aiStore.isfinish ? 'right': 'stop';
+});
 
 const mobileStyle = () => {
 
@@ -114,8 +114,8 @@ const suggestionsArr = ref([
 
 
 function sendOrStop (){
-  if(aiStore.isfinish) chat()
-  else abortRequest()
+  if(aiStore.isfinish) chat();
+  else abortRequest();
 }
 function chat(question: string | void) {
   if (question) {

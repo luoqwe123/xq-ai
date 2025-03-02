@@ -34,6 +34,8 @@ describe('askAi function', () => {
         }
       });
     });
+    // 模拟 alert 函数
+    global.alert = vi.fn();
   });
 
   beforeEach(() => {
@@ -41,6 +43,8 @@ describe('askAi function', () => {
     dataListStore.reset();
     // 重置 abortController
     abortControllerRef.value = null;
+    // 重置 fetch 和 alert 的 mock
+    vi.clearAllMocks();
   });
 
   it('should send a question to the AI and update the store correctly', async () => {
@@ -69,7 +73,18 @@ describe('askAi function', () => {
     // 清理 spy
     answerChangeSpy.mockRestore();
   });
+  it('should not send if question is empty', async () => {
+    const question = { text: '' };
+    const mockMessages = ref([]);
 
+    await askAi(question, false, mockMessages);
+
+    // 验证 fetch 未被调用
+    expect(global.fetch).not.toHaveBeenCalled();
+    // 验证 alert 被调用
+    expect(global.alert).toHaveBeenCalledWith('Please enter a question!');
+   
+  });
   it('should abort a request if abortRequest is called', async () => {
     const question = { text: 'What is the meaning of life?' };
     const mockMessages = ref([]);

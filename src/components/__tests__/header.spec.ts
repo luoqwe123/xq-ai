@@ -1,10 +1,19 @@
 import { mount } from '@vue/test-utils';
-import { describe, it, expect,  beforeEach, afterEach } from 'vitest';
+import { describe, it, expect,  beforeEach, afterEach,vi } from 'vitest';
 import HeaderComponent from '@/components/xqHeader.vue'; // Adjust the path to your component
 import Expansion from "@/components/inlineDialog/xqExpansion.vue";
 import Contraction from "@/components/inlineDialog/xqContraction.vue";
 import { nextTick } from 'vue';
 
+// 模拟 useAiStore
+vi.mock('@/stores/aiAnswer', () => ({
+  useAiStore: () => ({
+    isfinish: false,
+    messages: [],
+    useStopComp: false,
+    changeStopState: vi.fn(),
+  }),
+}));
 describe('HeaderComponent', () => {
   let wrapper: any;
 

@@ -29,9 +29,14 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   dataListStore.changeFinish();
   if (!expand) {
     dataListStore.addAnswer();
-    
   }
   const formData = new FormData();
+ 
+   if (!question.text.length) {
+    
+    alert('Please enter a question!');
+    return;
+  }
   formData.append("question", question.text);
   if (Array.isArray(question.files) && question.files.length) {
     question.files.forEach((el, index) => {
@@ -42,10 +47,7 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   const controller = new AbortController();
   // console.log("controller", controller)
   abortController.value = controller;
-  if (!question.text) {
-    alert('Please enter a question!');
-    return;
-  }
+ 
   // Disable the button while fetching response
 
   const length = messages?.value.length;
