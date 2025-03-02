@@ -14,7 +14,8 @@
     "fix": "eslint --fix",
     "test:cov": "vitest --coverage",
     "prepare": "husky",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "dev:prod": "vite --mode production --open" 
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",

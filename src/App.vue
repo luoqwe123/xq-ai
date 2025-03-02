@@ -9,6 +9,7 @@
 import Chat from "@/components/xqChat.vue";
 
 
+
 </script>
 
 <style scoped>

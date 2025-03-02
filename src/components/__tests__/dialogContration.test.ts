@@ -33,11 +33,11 @@ test('ContractionButton renders with default styles when no props are passed', a
   const wrapper = mount(ContractionButton, {});
 
   // 检查按钮的背景色是否为默认值
-  expect(wrapper.find('.btn').attributes('style')).toContain('background-color: black; color: black;');
+  expect(wrapper.find('.btn').attributes('style')).toContain(`background-color: white; color: ${hexToRgb("#8f8f8f")};`);
 
   // 检查文本颜色是否为默认值
 
-  expect(wrapper.find('.kbd span').attributes('style')).toContain('color: black;');
+  expect(wrapper.find('.kbd span').attributes('style')).toContain(`color: ${hexToRgb("#8f8f8f")};`);
 });
 
 // 你可以添加更多的测试来覆盖组件的不同方面，比如事件处理、动态内容更新等

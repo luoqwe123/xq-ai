@@ -10,8 +10,8 @@
               <!-- <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" /> -->
               <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content.text">
               </MainMarkdownParser>
-              <div class="question content" style="display: flex;flex-direction: column;">
-                <span v-if="message.sentBy == 'user'" >{{ message.content.text }}</span>
+              <div class="question content" style="display: flex;flex-direction: column;" v-if="message.sentBy == 'user'">
+                <span  >{{ message.content.text }}</span>
                 <div class="image" style="display: flex;">
                   <img v-for="(item,index) in message.content.files" :src="item.url" alt="" :key="index" style="height: 50px;width: 50px;border-radius: 10px;margin-right: 6px;">
                 </div>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="stop" @click="abortRequest(dataListStore.changeStopState)" v-if="dataListStore.useStopComp"
-         :style="{ bottom: stopBottom + 'px' }">
+         :style="{ bottom:  '93px' }">
       <Svg name="stop" height="20px" width="20px" class="stopBtn">
         <template #content><span
           style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
