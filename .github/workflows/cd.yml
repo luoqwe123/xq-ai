@@ -29,18 +29,15 @@ jobs:
               node-version: 20.x
               cache: "pnpm"
 
-          # 在 app/server 目录中安装依赖、打包并上传
-          - name: Install dependencies and build in app/server
+           # 在 app/server 目录中安装依赖并创建 .env 文件
+          - name: Install dependencies and create .env in app/server
             working-directory: app/server
             run: |
-                pnpm i
-               # pnpm build
-          # 动态生成 .env 文件
-          - name: Create .env file
-            run: |
-              echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env            
+              pnpm i 
+              echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env     
             env:
               OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
               
           - name: Deploy server
             uses: appleboy/scp-action@master 
@@ -57,12 +54,17 @@ jobs:
             working-directory: ''
             run: |
                 pnpm i
-               
+           # 动态生成 .env 文件
+          - name: Create .env file
+            run: |
+              echo "VITE_GLOB_API_URL=${{ secrets.VITE_GLOB_API_URL }}" > .env            
+            env:
+              VITE_GLOB_API_URL: ${{ secrets.VITE_GLOB_API_URL }}  
          
           # 构建项目
           - name: Build project
             run:  pnpm build
-            
+
           - name: Deploy Web
             uses: appleboy/scp-action@master
             with:
