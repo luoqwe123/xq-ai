@@ -57,9 +57,12 @@ jobs:
             working-directory: ''
             run: |
                 pnpm i
-                pnpm build
+               
          
-
+          # 构建项目
+          - name: Build project
+            run:  pnpm build
+            
           - name: Deploy Web
             uses: appleboy/scp-action@master
             with:
