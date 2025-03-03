@@ -35,9 +35,15 @@ jobs:
             run: |
                 pnpm i
                # pnpm build
-
+          # 动态生成 .env 文件
+          - name: Create .env file
+            run: |
+              echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env            
+            env:
+              OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+              
           - name: Deploy server
-            uses: appleboy/scp-action@master
+            uses: appleboy/scp-action@master 
             with:
                 source: "app/server/*"
                 host: ${{ secrets.SERVER_HOST }}
@@ -52,6 +58,7 @@ jobs:
             run: |
                 pnpm i
                 pnpm build
+         
 
           - name: Deploy Web
             uses: appleboy/scp-action@master
