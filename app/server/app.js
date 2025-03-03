@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const app = express();
-console.log( process.env.OPENAI_API_KEY)
+
 const port = 3001;
 const openai = new OpenAI({
   baseURL: 'https://ark.cn-beijing.volces.com/api/v3',

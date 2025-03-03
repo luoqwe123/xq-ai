@@ -10,6 +10,7 @@ type ChatRoomInstance = {
   createDebounce(): Function;
   $refs: { chat: HTMLElement };
 };
+type ExtendedChatRoomInstance = InstanceType<typeof ChatRoom> & ChatRoomInstance;
 // 模拟 useAiStore
 vi.mock('@/stores/aiAnswer', () => ({
   useAiStore: () => ({
@@ -21,14 +22,14 @@ vi.mock('@/stores/aiAnswer', () => ({
 }));
 
 describe('ChatRoom Component', () => {
-  let wrapper: VueWrapper<ChatRoomInstance>;
+  let wrapper: VueWrapper<ExtendedChatRoomInstance>;
   const mockChatElement = {
     scrollHeight: 200,
     scrollTop: 0,
   };
 
   beforeEach(() => {
-    wrapper = mount(ChatRoom) as VueWrapper<ChatRoomInstance>;
+    wrapper = mount(ChatRoom) as  VueWrapper<ExtendedChatRoomInstance>;
     wrapper.vm.chat = mockChatElement;
   });
 

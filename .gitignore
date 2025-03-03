@@ -14,9 +14,9 @@ dist-ssr
 coverage
 *.local
 app/server/node_modules
-.env*
+.env.production
 app/server/ignoire
-app/server/.env*
+app/server/.env
 
 coverage
 src/components/onlyTestCom

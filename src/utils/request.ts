@@ -51,9 +51,9 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   // Disable the button while fetching response
 
   const length = messages?.value.length;
- 
+
   try {
-    const response = await fetch('http://localhost:3001/ask', {
+    const response = await fetch(import.meta.env.VITE_GLOB_API_URL, {
       method: 'POST',
       // headers: {
       //     'Content-Type': 'application/json',
