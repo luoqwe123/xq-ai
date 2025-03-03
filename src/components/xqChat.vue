@@ -91,7 +91,7 @@ const sendMessage = async () => {
   //     sentBy: 'ai',
   //     content: '',
   // });
-  createDebounce = debounce(scrollToBottom, 1000);
+  createDebounce = debounce(scrollToBottom, 200);
   createDebounce.doFn();
   // await askAi({text:question,}, messages)
   // isReply.value = false
