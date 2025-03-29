@@ -56,7 +56,7 @@ export default defineConfig({
           utils: ['highlight.js', 'markdown-it'], // 工具库单独分包
         },
         chunkFileNames: 'js/[name]-[hash].js', // 优化 chunk 文件名
-        // assetFileNames: '[ext]/[name]-[hash].[ext]', // 静态资源命名
+        assetFileNames: '[ext]/[name]-[hash].[ext]', // 静态资源命名
       },
       treeshake: {
         moduleSideEffects: false, // 假设模块无副作用，抖得更狠
