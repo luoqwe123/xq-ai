@@ -10,7 +10,8 @@
 </template>
 
 <script setup lang='ts'>
-import Avator from "@/../public/125.jpg";
+import { withDefaults } from "vue";
+import Avator from "/125.jpg";
 const prop = withDefaults(defineProps<{
     content?:string 
 }>(),{

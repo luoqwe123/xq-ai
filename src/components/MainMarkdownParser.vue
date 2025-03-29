@@ -13,7 +13,7 @@
 // 未实现
 // 数学及化学公式
 import Avator from "@/../public/125.jpg";
-import { computed } from 'vue';
+import { computed ,withDefaults} from 'vue';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 const props = withDefaults(defineProps<{

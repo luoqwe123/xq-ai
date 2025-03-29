@@ -1,1 +1,1 @@
-pnpm fix
+pnpm lint:lint-staged

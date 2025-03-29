@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --open",
+    "dev": "vite --open ",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test": "vitest",
@@ -15,7 +15,9 @@
     "test:cov": "vitest --coverage",
     "prepare": "husky",
     "test:watch": "vitest --watch",
-    "dev:prod": "vite --mode production --open" 
+    "dev:prod": "vite --mode production --open",
+    "dev:server": "pnpm --filter server dev",
+    "lint:lint-staged": "lint-staged"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -45,7 +47,9 @@
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
+    "lint-staged": "^15.5.0",
     "npm-run-all2": "^7.0.2",
+    "rollup-plugin-visualizer": "^5.14.0",
     "typescript": "~5.7.3",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.0.11",
@@ -53,5 +57,8 @@
     "vite-plugin-vue-devtools": "^7.7.0",
     "vitest": "^3.0.2",
     "vue-tsc": "^2.2.0"
+  },
+  "lint-staged": {
+    "*.{vue,js,ts,jsx,tsx,md,json}": "eslint --fix"
   }
 }

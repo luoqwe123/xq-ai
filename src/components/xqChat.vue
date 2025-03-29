@@ -10,28 +10,29 @@
               <!-- <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" /> -->
               <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content.text">
               </MainMarkdownParser>
-              <div class="question content" style="display: flex;flex-direction: column;" v-if="message.sentBy == 'user'">
-                <span  >{{ message.content.text }}</span>
+              <div class="question content" style="display: flex;flex-direction: column;"
+                   v-if="message.sentBy == 'user'">
+                <span>{{ message.content.text }}</span>
                 <div class="image" style="display: flex;">
-                  <img v-for="(item,index) in message.content.files" :src="item.url" alt="" :key="index" style="height: 50px;width: 50px;border-radius: 10px;margin-right: 6px;">
+                  <img v-for="(item, index) in message.content.files" :src="item.url" alt="" :key="index"
+                       style="height: 50px;width: 50px;border-radius: 10px;margin-right: 6px;">
                 </div>
-                               
+
               </div>
-                            
+
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="stop" @click="abortRequest(dataListStore.changeStopState)" v-if="dataListStore.useStopComp"
-         :style="{ bottom:  '93px' }">
+         :style="{ bottom: '93px' }">
       <Svg name="stop" height="20px" width="20px" class="stopBtn">
         <template #content><span
           style="font-family: sans-serif;font-weight: bold;margin-left: 0.3rem;">停止</span></template>
       </Svg>
     </div>
-    <xqInput class="input-area"  @enter="sendMessage"
-             v-model:stop-bottom="stopBottom"></xqInput>
+    <xqInput class="input-area" @enter="sendMessage" v-model:stop-bottom="stopBottom"></xqInput>
     <!-- <div class="input-area" ref="inputArea">
             <textarea v-model="newMessage" @keyup.enter="sendMessage" @input="handleInput"
                 placeholder="Type a message..." row="1" class="text"></textarea>
@@ -46,7 +47,7 @@
 <script setup lang="ts">
 
 import Svg from "@/components/svgComponent.vue";
-import { ref,  watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import aiMessage from './aiTro.vue';
 import Header from "@/components/xqHeader.vue";
 import MainMarkdownParser from "./MainMarkdownParser.vue";
@@ -100,17 +101,17 @@ const sendMessage = async () => {
 watchEffect(() => {
   if (dataListStore.isfinish && createDebounce) {
     setTimeout(() => {
-      if(createDebounce) createDebounce.stop();
+      if (createDebounce) createDebounce.stop();
       createDebounce = null;
     }, 1500);
   }
 });
-const chat = ref<HTMLDivElement|null>(null);
+const chat = ref<HTMLDivElement | null>(null);
 function debounce(fn: (...args: unknown[]) => void, delay: number) {
   let timer: ReturnType<typeof setTimeout> | null = null;
-   
+
   function doFn(this: unknown, ...args: unknown[]) {
-   
+
     timer = setInterval(() => {
       fn.apply(this, args);
     }, delay);
@@ -127,7 +128,7 @@ function debounce(fn: (...args: unknown[]) => void, delay: number) {
 // 滚动到底部函数
 const scrollToBottom = () => {
   if (chat.value) {
-        
+
     let top = chat.value.scrollHeight;
     //console.log("top", top, chat.value.scrollHeight)
     chat.value.scrollTop = top;
@@ -149,96 +150,103 @@ function stopScroll(event: WheelEvent) {
 
 <style scoped>
 .chat-room {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    justify-content: space-between;
-    /* background-color: #f2f2f2; */
-    width: 100%;
-    align-items: center;
-    padding-top: 1rem;
-    overflow: hidden;
-    padding: 0px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  /* background-color: #f2f2f2; */
+  width: 100%;
+  align-items: center;
+  padding-top: 1rem;
+  overflow: hidden;
+  padding: 0px;
 }
 
 .chat-window {
-    flex: 1;
-    background-color: #fff;
-    width: 100%;
-    overflow: hidden;
+  flex: 1;
+  background-color: #fff;
+  width: 100%;
+  overflow: hidden;
 }
 
 .chatBox {
-    background-color: #fff;
-    width: 100%;
-    height: calc(100% - 80px);
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
+  background-color: #fff;
+  width: 100%;
+  height: calc(100% - 80px);
+  overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+  scrollbar-width: 10px;
+  /* Firefox */
+  scrollbar-color: #b0b0b0 white;
+  /* Firefox */
+  scrollbar-gutter: stable both-edges;
 }
 
+
+
 .main {
-    height: 100%;
-    width: 96%;
+  height: 100%;
+  width: 96%;
 }
 
 .messages {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    margin-bottom: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  margin-bottom: 10px;
 }
 
 .message {
-    display: flex;
-    margin-bottom: 10px;
+  display: flex;
+  margin-bottom: 10px;
 }
 
 .message.sent-by-you {
-    justify-content: flex-end;
-    align-items: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .message .content {
-    max-width: 60%;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #e0e0e0;
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
 }
 
 .message.sent-by-you .content {
-    background-color: #4caf50;
-    color: #fff;
+  background-color: #4caf50;
+  color: #fff;
 }
 
 .username {
-    font-weight: bold;
-    margin-right: 5px;
+  font-weight: bold;
+  margin-right: 5px;
 }
 
 .input-area {
-    display: flex;
-    padding: 10px;
-    justify-content: center;
-    background-color: #fff;
-    border-top: 1.6px solid #ddd;
-    width: 96%;
-    position: fixed;
-    bottom: 0px;
-    height: 93px;
-    z-index: 2;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  background-color: #fff;
+  border-top: 1.6px solid #ddd;
+  width: 96%;
+  position: fixed;
+  bottom: 0px;
+  height: 93px;
+  z-index: 2;
 
 }
 
 .stop {
-    width: 96%;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-    position: fixed;
-    /* bottom: 58px; */
-    z-index: 2;
+  width: 96%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  position: fixed;
+  /* bottom: 58px; */
+  z-index: 2;
 
 }
 
@@ -246,29 +254,29 @@ function stopScroll(event: WheelEvent) {
 
 .stopBtn {
 
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
-    /* 轻微阴影效果 */
-    transition: box-shadow 0.3s ease;
-    /* 阴影过渡效果 */
-    cursor: pointer;
-    background-color: white;
-    min-width: 90px;
-    display: flex;
-    justify-content: center;
-    border-radius: 24px;
-    height: 100%;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+  /* 轻微阴影效果 */
+  transition: box-shadow 0.3s ease;
+  /* 阴影过渡效果 */
+  cursor: pointer;
+  background-color: white;
+  min-width: 90px;
+  display: flex;
+  justify-content: center;
+  border-radius: 24px;
+  height: 100%;
 }
 
 .stopBtn:hover {
-    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
-    /* 鼠标悬停时阴影加深 */
+  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
+  /* 鼠标悬停时阴影加深 */
 }
 
 .stopBtn:active {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    /* 点击时阴影变浅 */
-    transform: translateY(1px);
-    /* 点击时按钮略微下移，增加交互感 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* 点击时阴影变浅 */
+  transform: translateY(1px);
+  /* 点击时按钮略微下移，增加交互感 */
 }
 
 /* button {

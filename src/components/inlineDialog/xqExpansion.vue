@@ -147,7 +147,6 @@ function chat(question: string | void) {
   height: 200vh;
   position: fixed;
   z-index: 10;
-
   left: -10px;
 }
 
@@ -161,8 +160,10 @@ function chat(question: string | void) {
 .dialog-main {
   overflow-y: scroll;
   width: 100%;
-  height: calc(100% - 53px);
-  padding: 0px 12px
+  height: calc(100% - 60px);
+  padding: 0px 12px;
+  scrollbar-width: 10px; /* Firefox */
+  scrollbar-color: #b0b0b0 #f0f0f0; /* Firefox */
 }
 
 .dialog-box {

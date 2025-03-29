@@ -44,7 +44,7 @@
 
 <script setup lang='ts'>
 //bug  输入框删除了文本，输入框高度的回去
-import { ref, defineEmits, watchEffect, computed, type CSSProperties,  } from 'vue';
+import { ref, defineEmits, watchEffect, computed, type CSSProperties,withDefaults  } from 'vue';
 import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
 import { useScreenSize } from "@/hooks/useScreenSize";

@@ -51,7 +51,7 @@ app.post('/ask',upload.none(), async (req, res) => {
           },
           { role: "user", content: userQuestion }],
         model: "ep-20250211161731-n8lcb",
-        stream: true, // Enable streaming
+        stream: true, // Enable streaming  sse 流式传输
         max_tokens: 2048,
       },
       {
@@ -89,6 +89,7 @@ app.post('/ask',upload.none(), async (req, res) => {
     console.error("Error occurred:", error);
     res.status(500).json({ error: "Failed to process the request." });
   }
+  
 });
 // Start the server
 app.listen(port, () => {

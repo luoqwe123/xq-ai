@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang='ts'>
-import { ref } from 'vue';
-import imgUrl from  "@/../public/125.jpg";
+import { ref,withDefaults } from 'vue';
+import imgUrl from  "/125.jpg";
 withDefaults(defineProps<{
     backColor?: string
 }>(),{
