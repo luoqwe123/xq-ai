@@ -53,7 +53,7 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   const length = messages?.value.length;
 
   try {
-    const response = await fetch(import.meta.env.VITE_GLOB_API_URL, {
+    const response = await fetch("http://1.92.82.236:9420/ask", {
       method: 'POST',
       // headers: {
       //     'Content-Type': 'application/json',
