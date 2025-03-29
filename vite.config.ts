@@ -52,7 +52,7 @@ export default defineConfig({
       ], // 排除测试文件
       output: {
         manualChunks: {   // 分包
-          vendor: ['vue', 'vue-router', 'pinia'], // 提取核心依赖
+          vendor: ['vue', 'pinia'], // 提取核心依赖
           utils: ['highlight.js', 'markdown-it'], // 工具库单独分包
         },
         chunkFileNames: 'js/[name]-[hash].js', // 优化 chunk 文件名
