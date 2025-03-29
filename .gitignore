@@ -17,7 +17,7 @@ app/server/node_modules
 .env.production
 app/server/ignoire
 app/server/.env
-vite-test.config.ts
+
 
 coverage
 src/components/onlyTestCom
