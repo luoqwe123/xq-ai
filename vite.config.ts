@@ -25,12 +25,12 @@ export default defineConfig({
     createSvgIconsPlugin({
       iconDirs:[path.resolve(process.cwd(),'src/assets/icon')],
       symbolId:'icon-[dir]-[name]',
-      svgoOptions: {
-        plugins: [
-          { name: 'preset-default' }, // 压缩 SVG
-          { name: 'removeViewBox', active: false }, // 保留 viewBox   
-        ],
-      },
+      // svgoOptions: {
+      //   plugins: [
+      //     { name: 'preset-default' }, // 压缩 SVG
+      //     { name: 'removeViewBox', active: false }, // 保留 viewBox   
+      //   ],
+      // },
     }),
     tailwindcss(),
     visualizer({ open: true, gzipSize: true }), // 可视化打包分析
