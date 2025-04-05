@@ -48,6 +48,7 @@ import { ref, defineEmits, watchEffect, computed, type CSSProperties,withDefault
 import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
 import { useScreenSize } from "@/hooks/useScreenSize";
+import { xidaMessage } from 'xida-ui';
 const { isMobile } = useScreenSize();
 const dataListStore = useAiStore();
 const props = withDefaults(defineProps<{
@@ -59,6 +60,7 @@ const props = withDefaults(defineProps<{
 });
 // 定义媒体文件类型
 export interface MediaFile {
+  type: string
   name: string;
   url: string;
   file: File;
@@ -202,19 +204,26 @@ const handleFileUpload = (event: Event) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (validtorFile(file.size)) {
-        alert("输入的文件不能超过5mb");
+        xidaMessage({
+          content:"输入的文件不能超过5mb",
+          type:"danger"
+        });
         return;
       }
 
       const url = URL.createObjectURL(file);
       if (mediaFiles.value.length >= 5) {
-        alert("输入的文件不能超过5个");
+        xidaMessage({
+          content:"输入的文件不能超过5个",
+          type:"danger"
+        });
         break;
       }
       mediaFiles.value.push({
         name: file.name,
         url,
         file,
+        type: file.type
       });
 
     }

@@ -6,7 +6,7 @@
         <div class="main">
           <aiMessage style="margin-bottom: 10px;" />
           <div class="messages">
-            <div v-for="(message, index) in dataListStore.messages" :key="index" :class="['message',]">
+            <div v-for="(message, index) in dataListStore.messages" :key="index" :class="['message',]" :style="{justifyContent:message.sentBy === 'ai'?'start':'end'}">
               <!-- <aiMessage v-if="message.sentBy == 'ai'" :content="message.content" /> -->
               <MainMarkdownParser v-if="message.sentBy == 'ai'" :data="message.content.text">
               </MainMarkdownParser>
@@ -172,7 +172,7 @@ function stopScroll(event: WheelEvent) {
 .chatBox {
   background-color: #fff;
   width: 100%;
-  height: calc(100% - 80px);
+  height: calc(100% - 100px);
   overflow-y: scroll;
   display: flex;
   justify-content: center;
@@ -181,6 +181,7 @@ function stopScroll(event: WheelEvent) {
   scrollbar-color: #b0b0b0 white;
   /* Firefox */
   scrollbar-gutter: stable both-edges;
+  
 }
 
 

@@ -7,7 +7,7 @@
 <script setup lang='ts'>
 
 import Chat from "@/components/xqChat.vue";
-
+// import xqInput from "./components/onlyTestCom/inputTest.vue";
 
 
 </script>
@@ -19,3 +19,6 @@ import Chat from "@/components/xqChat.vue";
 
 
 </style>
+
+
+

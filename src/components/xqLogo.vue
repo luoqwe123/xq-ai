@@ -5,8 +5,8 @@
     </div>
        
     <div class="select">
-      <select v-model="selectedFruit" @change="handleSelectChange" :style="{backgroundColor: backColor}">
-        <option value="deepseek-r1">deepseek-r1</option>
+      <select v-model="selectedModel" @change="handleSelectChange" :style="{backgroundColor: backColor}">
+        <option :value="item" v-for="(item,key) in modelArr" :key="key">{{ item }}</option>
       </select>
 
     </div>
@@ -14,19 +14,38 @@
 </template>
 
 <script setup lang='ts'>
-import { ref,withDefaults } from 'vue';
+import { ref,withDefaults,onMounted,  } from 'vue';
+import { useAiStore } from '@/stores/aiAnswer';
 import imgUrl from  "/125.jpg";
+const store = useAiStore();
 withDefaults(defineProps<{
     backColor?: string
 }>(),{
   backColor:'white'
 });
+const modelArr = ref<string[]>([]);
 
-
-let selectedFruit = ref("deepseek-r1");
+const selectedModel = ref<string>('');
 const handleSelectChange = () => {
-    
+  store.changeModel(selectedModel.value);
 };
+
+async function getModel (){
+  let res = await fetch(import.meta.env.VITE_GLOB_API_URL+'model',{
+    method:"GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  res = await res.json();
+    
+  modelArr.value = Object.keys(res);
+  selectedModel.value = modelArr.value[0];
+}
+onMounted(async ()=>{
+  await getModel();
+  handleSelectChange();
+});
 
 </script>
 

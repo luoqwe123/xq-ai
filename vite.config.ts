@@ -35,12 +35,12 @@ export default defineConfig({
       '@': path.resolve (__dirname,"./src"),
     },
   },
-  build: {  
-    rollupOptions: {
-      external: [
-        /src\/.*\/_tests_\/.*/,
-        /src\/onlyTestCom\/.*/
-      ], // 排除测试文件
-    },
-  },
+  // build: {  
+  //   rollupOptions: {
+  //     external: [
+  //       /src\/.*\/_tests_\/.*/,
+  //       /src\/onlyTestCom\/.*/
+  //     ], // 排除测试文件
+  //   },
+  // },
 });

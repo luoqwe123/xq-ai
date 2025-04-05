@@ -29,6 +29,9 @@ importers:
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
+      xida-ui:
+        specifier: ^1.1.9
+        version: 1.1.9
     devDependencies:
       '@eslint/js':
         specifier: ^9.21.0
@@ -48,9 +51,6 @@ importers:
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
-      '@types/marked':
-        specifier: ^6.0.0
-        version: 6.0.0
       '@types/node':
         specifier: ^22.10.7
         version: 22.13.1
@@ -940,10 +940,6 @@ packages:
 
   '@types/markdown-it@14.1.2':
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
-
-  '@types/marked@6.0.0':
-    resolution: {integrity: sha512-jmjpa4BwUsmhxcfsgUit/7A9KbrC48Q0q8KvnY107ogcjGgTFDlIL3RpihNpx2Mu1hM4mdFQjoVc4O6JoGKHsA==}
-    deprecated: This is a stub types definition. marked provides its own type definitions, so you do not need this installed.
 
   '@types/mdurl@2.0.0':
     resolution: {integrity: sha512-RGdgjQUZba5p6QEFAVx2OGb8rQDL/cPRG7GiedRzMcJ1tYnUANBncjbSB1NRGwbvjcPeikRABz2nshyPk1bhWg==}
@@ -4139,6 +4135,9 @@ packages:
       utf-8-validate:
         optional: true
 
+  xida-ui@1.1.9:
+    resolution: {integrity: sha512-TSifLnmq6tU8acKXyweqzn8Bzt11MPQwPuJQ1aws+vVO4zGA4avGMZ4gl4SF9Qg8NRZdGB8kKf2KP2uRP1zqcQ==}
+
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
@@ -4941,10 +4940,6 @@ snapshots:
     dependencies:
       '@types/linkify-it': 5.0.0
       '@types/mdurl': 2.0.0
-
-  '@types/marked@6.0.0':
-    dependencies:
-      marked: 15.0.7
 
   '@types/mdurl@2.0.0': {}
 
@@ -8600,6 +8595,8 @@ snapshots:
       signal-exit: 3.0.7
 
   ws@8.18.0: {}
+
+  xida-ui@1.1.9: {}
 
   xml-name-validator@4.0.0: {}
 

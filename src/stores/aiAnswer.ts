@@ -17,6 +17,7 @@ export const useAiStore = defineStore("aiStore", () => {
   const messages = ref<message[]>([]);
   const useStopComp = ref<boolean>(false);
   const isfinish = ref<boolean>(true);
+  const aiModel = ref<string>('');
   
   const addQuestion = (question:content)=>{
     messages.value.push({
@@ -47,16 +48,22 @@ export const useAiStore = defineStore("aiStore", () => {
     useStopComp.value = false;
     isfinish.value = true;
   };
+  const changeModel = (model:string)=>{
+    // console.log(model)
+    aiModel.value = model;
+  };
   return {
     messages,
     useStopComp,
     isfinish,
+    aiModel,
 
     addQuestion,
     addAnswer,
     addValueToAnswer,
     changeStopState,
     changeFinish,
-    reset
+    reset,
+    changeModel
   };
 });

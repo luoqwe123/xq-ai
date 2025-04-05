@@ -11,7 +11,8 @@ export default [
   {
     ignores: [
       "src/components/onlyTestCom/**",
-      "src/components/__tests__/**"
+      "src/components/__tests__/**",
+      "package.json"
     ], // 忽略 abc 文件夹及其子目录下的所有文件
 
     

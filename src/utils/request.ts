@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useAiStore } from "@/stores/aiAnswer";
 import type { MediaFile } from "@/components/xqInput.vue";
+import { xidaMessage } from "xida-ui";
 
 
 const abortController = ref<AbortController | null>(null);
@@ -30,20 +31,45 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   if (!expand) {
     dataListStore.addAnswer();
   }
-  const formData = new FormData();
+  // const formData = new FormData();
  
   if (!question.text.length) {
     
-    alert('Please enter a question!');
+    xidaMessage(
+      {
+        content:'Please enter a question!',
+        type:"danger"
+      }
+    );
     return;
   }
-  formData.append("question", question.text);
-  if (Array.isArray(question.files) && question.files.length) {
-    question.files.forEach((el, index) => {
-      formData.append(`files[${index}]`, el.file,el.name);
-    });
-  }
-    
+  const filePromises = question.files!.map(item =>
+    new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.readAsDataURL(item.file);
+    })
+  );
+  const fileBase64 = await Promise.all(filePromises);
+  // console.log(dataListStore.aiModel)
+  const payload = {
+    question: question.text,
+    files: fileBase64.map((data, index) => ({
+      data: data.split(',')[1], // 移除前缀
+      name: question.files![index].name,
+      type: question.files![index].type,
+    })),
+    model: dataListStore.aiModel
+  };
+
+  
+  // formData.append("question", question.text);
+  // if (Array.isArray(question.files) && question.files.length) {
+  //   question.files.forEach((el, index) => {
+  //     formData.append(`files[${index}]`, el.file,el.name);
+  //   });
+  // }
+  // console.log(formData.get("files[0]"))
   const controller = new AbortController();
   // console.log("controller", controller)
   abortController.value = controller;
@@ -51,14 +77,14 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
   // Disable the button while fetching response
 
   const length = messages?.value.length;
-
+  
   try {
-    const response = await fetch(import.meta.env.VITE_GLOB_API_URL, {
+    const response = await fetch(import.meta.env.VITE_GLOB_API_URL+'ask', {
       method: 'POST',
-      // headers: {
-      //     'Content-Type': 'application/json',
-      // },
-      body: formData,//JSON.stringify({ question }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
       signal: abortController.value.signal,
     });
     if (!response.body) {
@@ -75,7 +101,10 @@ async function askAi(question: question, expand: boolean, messages?:messagesType
         break;
       }
       if(response.status == 400){
-        alert(decoder.decode(value, { stream: true }));
+        xidaMessage({
+          content:decoder.decode(value, { stream: true }),
+          type:"danger"
+        });
         return;
       }
       if (expand && messages?.value.length && length) {
@@ -101,3 +130,5 @@ export {
   abortRequest,
   askAi
 };
+
+
