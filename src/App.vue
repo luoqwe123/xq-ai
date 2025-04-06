@@ -16,7 +16,19 @@ import Chat from "@/components/xqChat.vue";
 .app-container{
     width: 100%;
 }
+.input-area {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  background-color: #fff;
+  border-top: 1.6px solid #ddd;
+  width: 96%;
+  position: fixed;
+  bottom: 0px;
+  height: 93px;
+  z-index: 2;
 
+}
 
 </style>
 

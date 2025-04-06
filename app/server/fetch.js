@@ -93,7 +93,7 @@ const fetchStream = async (question, files, abortController, res, req,modelId) =
 
 
     while (true) {
-      checkAborted(req);
+      checkAborted(abortController,req);
       const { done, value } = await reader.read();
       if (done) {
         res.write('data: [DONE]\n\n');

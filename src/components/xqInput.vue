@@ -44,12 +44,11 @@
 
 <script setup lang='ts'>
 //bug  输入框删除了文本，输入框高度的回去
-import { ref, defineEmits, watchEffect, computed, type CSSProperties,withDefaults  } from 'vue';
+import { ref, defineEmits, watchEffect, computed, type CSSProperties,withDefaults ,onMounted } from 'vue';
 import { useAiStore } from '@/stores/aiAnswer';
 import { askAi } from '@/utils/request';
-import { useScreenSize } from "@/hooks/useScreenSize";
+
 import { xidaMessage } from 'xida-ui';
-const { isMobile } = useScreenSize();
 const dataListStore = useAiStore();
 const props = withDefaults(defineProps<{
   inputImage?: number
@@ -78,13 +77,6 @@ const sendBtnBack = ref("");
 
 const emit = defineEmits(['update:modelValue', 'enter', 'update:stopBottom']);
 
-const InputArea = () => {
-  if (inputArea.value && textArea.value) {
-    inputArea.value.style.height = "93px";
-    textArea.value.style.height = props.textareaH + 'px';
-  }
-
-};
 watchEffect(() => {
   if (newMessage.value) {
     sendBtnFill.value = "white";
@@ -95,15 +87,7 @@ watchEffect(() => {
     sendBtnBack.value = "";
   }
 
-  if (isMobile) {
-    if (newMessage.value.length <= 20) {
-      InputArea();
-    }
-  } else {
-    if (newMessage.value.length <= 35) {
-      InputArea();
-    }
-  }
+  
 
 });
 const send = async (event?: KeyboardEvent): Promise<void> => {
@@ -118,6 +102,7 @@ const send = async (event?: KeyboardEvent): Promise<void> => {
   // console.log("files",formdata.files)
   newMessage.value = '';
   mediaFiles.value = [];
+  updateContainerHeight();
   // mediaFiles.value.forEach((el, index) => {
   //     removeFile(el, index)
   // });
@@ -130,6 +115,7 @@ const send = async (event?: KeyboardEvent): Promise<void> => {
     dataListStore.changeStopState();
   }
   // console.log(stopBottom.value);
+ 
   emit("update:stopBottom", stopBottom.value);
 };
 const imgStyle = computed((): CSSProperties => ({
@@ -144,44 +130,35 @@ const imgStyle = computed((): CSSProperties => ({
 
 
 
-const getInputLine = (el: HTMLTextAreaElement) => {
-  el.style.height = 'auto'; // 重置高度以获取准确 scrollHeight
-  const scrollHeight = el.scrollHeight;
-  // 计算行数：总高度减去内边距，除以单行高度
-  // console.log(scrollHeight, props.textareaH);
-  const calculatedLines = Math.round(scrollHeight / props.textareaH);
-  return Math.max(1, calculatedLines); // 至少为 1 行
+const getInputLineHeight = () => {
+  const lines = Math.max(1, (newMessage.value.match(/\n/g) || []).length + 1);
+  const lineHeight = props.textareaH;
+   
+  return lines * lineHeight;
 
+};
+
+const updateContainerHeight = () => {
+  if (!inputArea.value || !textArea.value) return;
+  
+  let textHeight = getInputLineHeight();
+  const mediaHeight = mediaFiles.value.length > 0 ? props.inputImage + 10 : 0; // 图片高度 + 间距
+  
+  if(textHeight>320){
+    textHeight = 320;
+    textArea.value.style.overflowY = "scroll";
+  }else{
+    textArea.value.style.overflowY = "";
+  }
+  const totalHeight = textHeight + mediaHeight + 55; // 文本 + 图片 + 按钮区域（固定 30px）
+  textArea.value.style.height = `${textHeight}px`;
+  inputArea.value.style.height = `${totalHeight}px`;
 };
 const handleInput = (e: Event) => {
   const el = e.target as HTMLTextAreaElement;
-  el.style.overflowY = 'hidden'; // 隐藏垂直滚动条
-  el.style.resize = 'none'; // 禁止用户手动调整大小
-  el.style.lineHeight = `${props.textareaH}px`;
-  el.style.height = 'auto'; // 根据内容自动调整高度
-  const newLineCount = getInputLine(el); // 当前行数
-  // const newHeight = lineHeight * newLineCount + paddingHeight; // 新高度
-  const newHeight = props.textareaH * newLineCount;
-
-  // 更新 textarea 高度
-  el.style.height = `${newHeight}px`;
-
-  // console.log(newLineCount);
-  // 同步更新外层容器高度
-  if (inputArea.value) {
-    inputArea.value.style.height = `${newHeight + stopBottom.value - props.textareaH}px`; // 外层额外 10px padding 和 10px margin-top
-
-  }
-  // const scrollHeight = el.scrollHeight;
-  // // console.log(scrollHeight);
-  // el.style.height = `${scrollHeight}px`;
-  // stopBottom.value = scrollHeight + stopBottom.value - textareaHeight.value;
-  // // console.log("stop",scrollHeight,textareaHeight.value);
-
-  // if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
-
-  // textareaHeight.value = scrollHeight;
-
+  el.style.overflowY = 'hidden';
+  el.style.resize = 'none';
+  updateContainerHeight();
 };
 
 // 判断文件是否为图片
@@ -227,13 +204,8 @@ const handleFileUpload = (event: Event) => {
       });
 
     }
+    updateContainerHeight();
   }
-  // console.log("test", mediaFiles.value.length);
-  if (mediaFiles.value.length === 1) {
-    stopBottom.value = stopBottom.value + props.inputImage;
-    if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
-  }
-
   // 重置文件输入（可选，但通常是个好习惯）
   if (fileInputRef.value) {
     fileInputRef.value.value = '';
@@ -246,13 +218,12 @@ const removeFile = (el: MediaFile, index: number) => {
   URL.revokeObjectURL(el.url);
 
   mediaFiles.value.splice(index, 1);
-  if (mediaFiles.value.length === 0) {
-    stopBottom.value = stopBottom.value - props.inputImage;
-    if (inputArea.value) inputArea.value.style.height = stopBottom.value + 'px';
-  }
+  updateContainerHeight();
 };
 
-
+onMounted(() => {
+  updateContainerHeight(); // 初始高度
+});
 // 当媒体文件数组变化时，释放对象URL（可选）
 // watch(mediaFiles, (newFiles, oldFiles) => {
 //     console.log('files',oldFiles,newFiles)
@@ -278,6 +249,7 @@ const removeFile = (el: MediaFile, index: number) => {
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 5px 10px;
   background-color: #f7f7f7;
 
