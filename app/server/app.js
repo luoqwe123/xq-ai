@@ -36,24 +36,34 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(cors());
 // Endpoint to handle question from the front-end
 app.post('/ask', async (req, res) => {
-  const { question, files,model } = req.body;
+  const { question, files, model } = req.body;
+  if(!question || !model) return res.status(400).json("暂时不支持文件😅!" );
   // 处理文件（解码 Base64 并保存）
-  const fileBuffers = files.map(file => ({
-    name: file.name,
-    type: file.type,
-    data: Buffer.from(file.data, 'base64'),
-  }));
+  let  fileBuffers;
+  try {
+    if (files) {
+      fileBuffers = files.map(file => ({
+        name: file.name,
+        type: file.type,
+        data: Buffer.from(file.data, 'base64'),
+      }));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+
   const modelId = aiModel[model];
   // await Promise.all(
   //   fileBuffers.map(async (file) => {
-    
+
   //     const filePath = path.join(uploadDir, file.name);
   //     await fs.writeFile(filePath, file.data);
   //   })
   // );
-  
+
   if (!question) {
-    return res.status(400).json( "Question is required!" );
+    return res.status(400).json("Question is required!");
   }
   // if(req.body.files){
   //   return res.status(400).json("暂时不支持文件😅!" );
@@ -78,16 +88,16 @@ app.post('/ask', async (req, res) => {
     //     signal: abortController.signal, // 将信号绑定到请求
     //   }
     // );
-    await myFetch(question,fileBuffers,abortController,res,req,modelId);
+    await myFetch(question, fileBuffers, abortController, res, req, modelId);
 
     // Set headers for streaming response
     // res.setHeader('Content-Type', 'text/event-stream');
     // res.setHeader('Cache-Control', 'no-cache');
     // res.setHeader('Connection', 'keep-alive');
-        
+
 
     // for await (const chunk of response.iterator()) {
-      
+
     //   // console.log(chunk.choices[0]);
     //   let content = chunk.choices[0].delta.content;
     //   // console.log(content == "");
@@ -104,15 +114,15 @@ app.post('/ask', async (req, res) => {
     // }
     // // Indicate the stream is done
     // // res.write(`data: [DONE]\n\n`);
-       
+
     // res.end();
   } catch (error) {
     console.error("Error occurred:", error);
     res.status(500).json({ error: "Failed to process the request." });
   }
-  
+
 });
-app.get('/model',(req,res)=>{
+app.get('/model', (req, res) => {
   res.json(aiModel);
 });
 // Start the server
