@@ -37,20 +37,21 @@ app.use(cors());
 // Endpoint to handle question from the front-end
 app.post('/ask', async (req, res) => {
   const { question, files, model } = req.body;
-  if(!question || !model) return res.status(400).json("暂时不支持文件😅!" );
+  if (!question || !model) return res.status(400).json("参数错误😅!");
   // 处理文件（解码 Base64 并保存）
-  let  fileBuffers;
-  try {
-    if (files) {
-      fileBuffers = files.map(file => ({
-        name: file.name,
-        type: file.type,
-        data: Buffer.from(file.data, 'base64'),
-      }));
-    }
-  } catch (err) {
-    console.log(err);
+  let fileBuffers;
+
+
+  if (Array.isArray(files)) {
+    fileBuffers = files.map(file => ({
+      name: file.name,
+      type: file.type,
+      data: Buffer.from(file.data, 'base64'),
+    }));
+  }else{
+    return res.status(400).json("参数错误😅!");
   }
+
 
 
   const modelId = aiModel[model];
@@ -69,7 +70,7 @@ app.post('/ask', async (req, res) => {
   //   return res.status(400).json("暂时不支持文件😅!" );
   // }
   try {
-    // console.log(userQuestion);
+  // console.log(userQuestion);
     const abortController = new AbortController();
 
     // const response = await openai.chat.completions.create(
@@ -115,7 +116,7 @@ app.post('/ask', async (req, res) => {
     // // Indicate the stream is done
     // // res.write(`data: [DONE]\n\n`);
 
-    // res.end();
+  // res.end();
   } catch (error) {
     console.error("Error occurred:", error);
     res.status(500).json({ error: "Failed to process the request." });
